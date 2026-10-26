@@ -9,26 +9,11 @@ import ImagePlaceholder from "../components/ui/ImagePlaceholder.astro";
 import TextField from "../components/ui/TextField.astro";
 import SelectField from "../components/ui/SelectField.astro";
 import CheckboxField from "../components/ui/CheckboxField.astro";
-import IconCctv from "../components/icons/IconCctv.astro";
-import IconAntifractie from "../components/icons/IconAntifractie.astro";
-import IconInterfonie from "../components/icons/IconInterfonie.astro";
-import IconControlAcces from "../components/icons/IconControlAcces.astro";
-import IconAutomatizari from "../components/icons/IconAutomatizari.astro";
-import IconService from "../components/icons/IconService.astro";
-import IconConsultanta from "../components/icons/IconConsultanta.astro";
-import IconProiectare from "../components/icons/IconProiectare.astro";
 import { cta } from "../data/site";
+import { serviceOptions, services } from "../data/services";
+import { getProjects } from "../data/projects";
 
-const services = [
-  { title: "CCTV", line: "Vizibilitate în orice condiții.", Icon: IconCctv },
-  { title: "Antifracție", line: "Protecție care contează.", Icon: IconAntifractie },
-  { title: "Interfonie", line: "", Icon: IconInterfonie },
-  { title: "Control acces", line: "Acces sigur. Control complet.", Icon: IconControlAcces },
-  { title: "Automatizări porți", line: "Confort și siguranță zilnică.", Icon: IconAutomatizari },
-  { title: "Service & mentenanță", line: "", Icon: IconService },
-  { title: "Consultanță", line: "", Icon: IconConsultanta },
-  { title: "Proiectare", line: "", Icon: IconProiectare },
-];
+const projects = await getProjects();
 ---
 <BaseLayout>
   <Section>
@@ -50,13 +35,26 @@ const services = [
   <Section band>
     <SectionHeading eyebrow="Soluții">Tehnologie pentru siguranță reală.</SectionHeading>
     <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {services.map(({ title, line, Icon }) => (
-        <ServiceCard title={title} description={line || undefined} href="/solutii">
+      {services.map(({ slug, name, line, Icon }) => (
+        <ServiceCard title={name} description={line} href={`/solutii#${slug}`}>
           <Icon slot="icon" />
         </ServiceCard>
       ))}
     </div>
   </Section>
+
+  {projects.length > 0 && (
+    <Section>
+      <SectionHeading eyebrow="Proiecte">Proiecte recente</SectionHeading>
+      <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+        {projects.slice(0, 3).map((p) => (
+          <ServiceCard title={p.data.title} description={`${p.data.location} · ${p.data.year}`}>
+            <ImagePlaceholder slot="media" />
+          </ServiceCard>
+        ))}
+      </div>
+    </Section>
+  )}
 
   <div data-theme="light" class="bg-surface text-ink">
     <Section>
@@ -65,7 +63,7 @@ const services = [
         <TextField id="demo-nume" label="Nume" required />
         <TextField id="demo-telefon" label="Telefon" type="tel" error="Introduceți un număr de telefon valid." />
         <SelectField id="demo-serviciu" label="Serviciu dorit" placeholder="Alegeți un serviciu"
-          options={services.map((s) => ({ value: s.title, label: s.title }))} />
+          options={serviceOptions} value="cctv" />
         <TextField id="demo-mesaj" label="Mesaj" multiline hint="Spuneți-ne ce doriți să protejați." />
         <CheckboxField id="demo-gdpr" required>
           Sunt de acord cu <a href="/politica-de-confidentialitate">politica de confidențialitate</a>.
