@@ -1,0 +1,183 @@
+---
+// Quote request form. Posts to site.formEndpoint; while that is empty it explains that
+// the form is not active yet and gives the phone number instead of submitting.
+import TextField from "../ui/TextField.astro";
+import SelectField from "../ui/SelectField.astro";
+import CheckboxField from "../ui/CheckboxField.astro";
+import Button from "../ui/Button.astro";
+import { site } from "../../data/site";
+import { serviceOptions } from "../../data/services";
+
+interface Props { id?: string; class?: string }
+const { id = "oferta", class: cls } = Astro.props;
+const endpoint = site.formEndpoint;
+
+if (!endpoint) {
+  console.warn("[QuoteForm] site.formEndpoint is empty: the quote form will not submit.");
+}
+
+// Romanian numbers: 0 / +40 / 0040, then 2xx, 3xx or 7xx and six more digits, optional separators.
+const phonePattern = String.raw`(\+40|0040|0)\s?[237]\d{2}([\s.\-]?\d{3}){2}`;
+---
+<div id={id} class:list={["scroll-mt-28", cls]}>
+  <form method="post" action={endpoint || undefined} novalidate data-quote-form data-endpoint={endpoint}
+    data-phone={site.contact.phone} class="grid gap-6 sm:grid-cols-2">
+    <TextField id="nume" label="Nume" required autocomplete="name" />
+    <TextField id="telefon" label="Telefon" type="tel" required autocomplete="tel" pattern={phonePattern}
+      hint="De exemplu 0722 123 456." />
+    <TextField id="email" label="Email" type="email" autocomplete="email" hint="Opțional." />
+    <TextField id="localitate" label="Localitate" autocomplete="address-level2" />
+    <SelectField id="serviciu" label="Serviciu dorit" placeholder="Alegeți un serviciu" options={serviceOptions}
+      class="sm:col-span-2" />
+    <TextField id="mesaj" label="Mesaj" multiline rows={5} class="sm:col-span-2"
+      hint="Spuneți-ne ce doriți să protejați: tipul clădirii, suprafața, ce sisteme aveți deja." />
+
+    {/* Honeypot: hidden from people, filled in by bots. */}
+    <div class="absolute -left-[9999px] size-px overflow-hidden" aria-hidden="true">
+      <label for="website">Nu completați acest câmp</label>
+      <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <CheckboxField id="acord" required class="sm:col-span-2">
+      Sunt de acord ca datele mele să fie folosite pentru a primi o ofertă, conform
+      <a href="/politica-de-confidentialitate">politicii de confidențialitate</a>.
+    </CheckboxField>
+
+    <div class="flex flex-col items-start gap-4 sm:col-span-2">
+      <Button type="submit" size="lg">Trimite cererea</Button>
+      <p data-form-status role="status" class="m-0 text-small font-semibold text-ink empty:hidden"></p>
+    </div>
+  </form>
+
+  <div data-form-success hidden class="flex flex-col items-start gap-3">
+    <p class="m-0 text-title uppercase">Mulțumim.</p>
+    <span class="rule-gold" aria-hidden="true" />
+    <p class="m-0 max-w-[48ch] text-body-lg text-ink">
+      Am primit cererea dumneavoastră și vă contactăm în curând pentru detalii.
+    </p>
+  </div>
+</div>
+
+<script>
+  const messages: Record<string, Partial<Record<keyof ValidityState, string>>> = {
+    nume: { valueMissing: "Introduceți numele dumneavoastră." },
+    telefon: {
+      valueMissing: "Introduceți un număr de telefon.",
+      patternMismatch: "Introduceți un număr de telefon valid, de exemplu 0722 123 456.",
+    },
+    email: { typeMismatch: "Introduceți o adresă de email validă, de exemplu nume@exemplu.ro." },
+    acord: { valueMissing: "Bifați acordul pentru a putea trimite cererea." },
+  };
+
+  type Control = HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement;
+
+  const messageFor = (control: Control) => {
+    const byState = messages[control.name] ?? {};
+    for (const state of Object.keys(byState) as (keyof ValidityState)[]) {
+      if (control.validity[state]) return byState[state];
+    }
+    return "Verificați acest câmp.";
+  };
+
+  /** Shows or clears the design-system error state: 2px ink border and a "!" message. */
+  const setError = (control: Control, message: string | null) => {
+    const field = control.closest("[data-field]");
+    if (!field) return;
+    const errorId = `${control.id}-error`;
+    let error = document.getElementById(errorId);
+    const describedBy = (control.getAttribute("aria-describedby") ?? "").split(" ").filter((t) => t && t !== errorId);
+
+    control.classList.toggle("border", !message);
+    control.classList.toggle("border-line-strong", !message);
+    control.classList.toggle("border-2", !!message);
+    control.classList.toggle("border-ink", !!message);
+
+    if (message) {
+      if (!error) {
+        error = document.createElement("p");
+        error.id = errorId;
+        error.className = "m-0 text-small font-semibold text-ink";
+        field.append(error);
+      }
+      error.innerHTML = '<span aria-hidden="true">! </span>';
+      error.append(message);
+      control.setAttribute("aria-invalid", "true");
+      describedBy.push(errorId);
+    } else {
+      error?.remove();
+      control.removeAttribute("aria-invalid");
+    }
+    if (describedBy.length) control.setAttribute("aria-describedby", describedBy.join(" "));
+    else control.removeAttribute("aria-describedby");
+  };
+
+  const validate = (control: Control) => {
+    const valid = control.checkValidity();
+    setError(control, valid ? null : messageFor(control));
+    return valid;
+  };
+
+  for (const form of document.querySelectorAll<HTMLFormElement>("[data-quote-form]")) {
+    const controls = [...form.querySelectorAll<Control>("input:not([name=website]), select, textarea")];
+    const status = form.querySelector<HTMLElement>("[data-form-status]")!;
+    const success = form.parentElement?.querySelector<HTMLElement>("[data-form-success]");
+    const endpoint = form.dataset.endpoint;
+    const phone = form.dataset.phone;
+
+    // Preselect the service from /contact?serviciu=<slug>
+    const preset = new URLSearchParams(location.search).get("serviciu");
+    const select = form.querySelector<HTMLSelectElement>("select[name=serviciu]");
+    if (preset && select && [...select.options].some((o) => o.value === preset)) select.value = preset;
+
+    // Once a field has shown an error, re-check it as the visitor corrects it.
+    for (const control of controls) {
+      const recheck = () => control.hasAttribute("aria-invalid") && validate(control);
+      control.addEventListener("input", recheck);
+      control.addEventListener("change", recheck);
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      status.textContent = "";
+
+      const invalid = controls.filter((control) => !validate(control));
+      if (invalid.length) {
+        invalid[0].focus();
+        return;
+      }
+
+      const showSuccess = () => {
+        form.hidden = true;
+        if (success) {
+          success.hidden = false;
+          success.setAttribute("tabindex", "-1");
+          success.focus();
+        }
+      };
+
+      // Bots fill the hidden field; pretend it worked and send nothing.
+      if ((form.elements.namedItem("website") as HTMLInputElement | null)?.value) return showSuccess();
+
+      if (!endpoint) {
+        status.textContent = `Formularul va fi activ în curând. Pentru o ofertă, sunați-ne la ${phone}.`;
+        return;
+      }
+
+      const submit = form.querySelector<HTMLButtonElement>("button[type=submit]");
+      if (submit) submit.disabled = true;
+      try {
+        const response = await fetch(endpoint, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { Accept: "application/json" },
+        });
+        if (!response.ok) throw new Error(String(response.status));
+        showSuccess();
+      } catch {
+        status.textContent = `Cererea nu a putut fi trimisă. Încercați din nou sau sunați-ne la ${phone}.`;
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+  }
+</script>

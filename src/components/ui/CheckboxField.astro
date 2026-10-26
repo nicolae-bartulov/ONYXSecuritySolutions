@@ -12,7 +12,7 @@ interface Props {
 const { id, name = id, value = "da", required, hint, error, class: cls } = Astro.props;
 const hintId = hint || error ? `${id}-hint` : undefined;
 ---
-<div class:list={["flex flex-col gap-2 min-w-0", cls]}>
+<div data-field class:list={["flex flex-col gap-2 min-w-0", cls]}>
   <div class="flex items-start gap-3">
     <span class="relative mt-0.5 inline-flex size-5 shrink-0">
       <input id={id} name={name} value={value} type="checkbox" required={required}
