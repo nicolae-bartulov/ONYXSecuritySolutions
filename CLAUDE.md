@@ -13,7 +13,7 @@ A fully static site (no SSR adapter). All pages exist; most company details and 
 ## Structure
 
 - `src/layouts/BaseLayout.astro` — `<html lang="ro">`, font + `global.css`, meta/Open Graph (default image `public/og-default.png`), optional `jsonLd` prop, skip link, NavBar, `<main id="continut">`, Footer. Props: `title`, `description`, `theme` (`"light"` or omitted for dark), `image`, `jsonLd`.
-- `src/components/ui/` — design-system components from the doc (`Logo`, `Button`, `Eyebrow`, `SectionHeading`, `ServiceCard`, `TextField`) plus `Section` (standard padding/gutters, `band` prop), `ImagePlaceholder`, `SelectField`, `CheckboxField`.
+- `src/components/ui/` — design-system components from the doc (`Logo`, `Button`, `Eyebrow`, `SectionHeading`, `ServiceCard`, `TextField`) plus `Section` (standard padding/gutters), `ImagePlaceholder`, `SelectField`, `CheckboxField`.
 - `src/components/layout/` — `NavBar` (desktop links from `lg`, menu button below), `Footer`.
 - `src/components/sections/` — page sections: `CtaBand`, `ProjectCard`, `HeroPanther`, `QuoteForm`.
 - `src/components/icons/` — eight placeholder line icons, one per service, to be replaced by the official set.
@@ -47,7 +47,7 @@ Key mechanics spread across `global.css` and the doc:
 - **Shape:** square brand — `rounded-none` everywhere except `rounded-sm` (2px) on buttons/badges. Brand utilities `chamfer-sm`, `chamfer-tr`, `chamfer-lg` (cut corners) and `rule-gold` (40×2px accent rule) are defined in `global.css`. No shadows or gradients.
 - **Font:** Montserrat via `@fontsource-variable/montserrat`, imported in `BaseLayout` together with `global.css`.
 - **Logos** are PNGs in `src/assets/brand/logos/` named `onyx-{landscape|portrait|icon}-on-{dark|light}.png`, trimmed to the artwork; the `Logo` component picks the variant per theme using `astro:assets` `<Image>`. Below `sm` the header shows the icon variant so the CTA fits.
-- **Bands** (`Section band`, Footer) set `--accent-ink` to ink: gold text on graphite fails contrast (~4.2:1). Gold fills and rules stay gold.
+- **`bg-surface-alt` as a full-width area is used only for the Footer**: page sections are plain `bg-surface`, separated by spacing. This deliberately narrows the design doc's "alternate bands sparingly". It still fills image placeholders and card media. The Footer sets `--accent-ink` to ink because gold text on graphite fails contrast (~4.2:1); gold fills and rules stay gold.
 
 `src/styles/global.css` is the live version of the theme and has diverged slightly from the snippet in section 2 of the doc (it adds the `dark:` custom variant and sets `--spacing: 4px`); edit `global.css` directly rather than re-pasting the doc's version.
 
