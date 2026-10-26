@@ -1,0 +1,105 @@
+---
+// All services on /solutii: a sticky nav on the left (a row of links below lg) and one article per
+// service. While scrolling, the service with the most of itself on screen is highlighted in the
+// nav the same way as hover, and marked aria-current="location".
+import { Image } from "astro:assets";
+import Button from "../ui/Button.astro";
+import ImagePlaceholder from "../ui/ImagePlaceholder.astro";
+import { services } from "../../data/services";
+import { url } from "../../lib/url";
+---
+<div data-solutions class="grid gap-12 lg:grid-cols-[14rem_1fr]">
+  <nav aria-label="Soluții pe această pagină" class="lg:sticky lg:top-28 lg:self-start">
+    <ul class="m-0 flex list-none flex-wrap gap-x-6 p-0 lg:flex-col">
+      {services.map(({ slug, name }, i) => (
+        <li class="lg:border-t lg:border-line">
+          <a href={`#${slug}`} data-nav={slug} data-active={i === 0 ? "" : undefined}
+            class="inline-block py-3.5 text-eyebrow uppercase text-ink no-underline transition-colors duration-150 hover:text-accent-ink data-active:text-accent-ink lg:py-3">
+            {name}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="flex flex-col gap-12 md:gap-24">
+    {services.map(({ slug, name, line, summary, details, Icon, image, imageAlt }) => (
+      <article id={slug} data-solution class="grid scroll-mt-28 gap-8 border-t border-line pt-12 md:grid-cols-2 md:gap-12">
+        <div class="flex flex-col items-start gap-4">
+          <span class="inline-flex size-8 text-accent light:text-ink [&>svg]:size-full" aria-hidden="true">
+            <Icon />
+          </span>
+          <h2 class="m-0 text-title uppercase md:text-headline">{name}</h2>
+          <span class="rule-gold" aria-hidden="true" />
+          <p class="m-0 text-body-lg text-ink">{line}</p>
+          <p class="m-0 max-w-[65ch] text-ink-muted">{summary}</p>
+          <ul class="m-0 flex list-none flex-col gap-2 p-0">
+            {details.map((d) => (
+              <li class="flex items-baseline gap-3 text-small text-ink">
+                <span class="inline-block size-1.5 shrink-0 -translate-y-0.5 bg-accent" aria-hidden="true" />
+                {d}
+              </li>
+            ))}
+          </ul>
+          <Button href={url(`/contact?serviciu=${slug}#oferta`)} variant="ghost">
+            Solicită ofertă<span class="sr-only"> pentru {name}</span>
+          </Button>
+        </div>
+        {image ? (
+          <Image src={image} alt={imageAlt ?? name} widths={[640, 960]} sizes="(min-width: 768px) 40vw, 100vw"
+            class="chamfer-tr aspect-[4/3] w-full object-cover md:self-start" />
+        ) : (
+          <ImagePlaceholder chamfer="tr" class="md:self-start" />
+        )}
+      </article>
+    ))}
+  </div>
+</div>
+
+<style is:global>
+  @media (prefers-reduced-motion: no-preference) {
+    html:has([data-solutions]) { scroll-behavior: smooth; }
+  }
+</style>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>("[data-solutions]")) {
+    const links = new Map(
+      [...root.querySelectorAll<HTMLElement>("[data-nav]")].map((a) => [a.dataset.nav!, a]),
+    );
+    const articles = [...root.querySelectorAll<HTMLElement>("[data-solution]")];
+    const header = document.querySelector("header");
+    let active = articles[0].id;
+    let frame = 0;
+
+    const highlight = (slug: string) => {
+      links.get(active)?.removeAttribute("data-active");
+      links.get(active)?.removeAttribute("aria-current");
+      active = slug;
+      links.get(slug)?.setAttribute("data-active", "");
+      links.get(slug)?.setAttribute("aria-current", "location");
+    };
+
+    // The service with the most pixels on screen, below the sticky header, wins.
+    const measure = () => {
+      const top = header?.getBoundingClientRect().bottom ?? 0;
+      let best = active;
+      let bestPx = 0;
+      for (const article of articles) {
+        const r = article.getBoundingClientRect();
+        const px = Math.min(r.bottom, innerHeight) - Math.max(r.top, top);
+        if (px > bestPx) { best = article.id; bestPx = px; }
+      }
+      if (best !== active) highlight(best);
+    };
+    const schedule = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    };
+
+    highlight(active);
+    measure();
+    addEventListener("scroll", schedule, { passive: true });
+    addEventListener("resize", schedule);
+  }
+</script>
