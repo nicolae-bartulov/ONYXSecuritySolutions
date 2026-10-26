@@ -19,11 +19,11 @@ import { services } from "../data/services";
   <Section>
     <div class="grid gap-12 lg:grid-cols-[14rem_1fr]">
       <nav aria-label="Soluții pe această pagină" class="lg:sticky lg:top-28 lg:self-start">
-        <ul class="m-0 flex list-none flex-wrap gap-x-6 gap-y-3 p-0 lg:flex-col lg:gap-0">
+        <ul class="m-0 flex list-none flex-wrap gap-x-6 p-0 lg:flex-col">
           {services.map(({ slug, name }) => (
             <li class="lg:border-t lg:border-line">
               <a href={`#${slug}`}
-                class="inline-block py-1 text-eyebrow uppercase text-ink no-underline transition-colors duration-150 hover:text-accent-ink lg:py-3">
+                class="inline-block py-3.5 text-eyebrow uppercase text-ink no-underline transition-colors duration-150 hover:text-accent-ink lg:py-3">
                 {name}
               </a>
             </li>

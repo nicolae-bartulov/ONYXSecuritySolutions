@@ -13,6 +13,8 @@ export const site = {
     email: "contact@example.com", // TODO(content)
     address: "[Stradă, număr, localitate, județ]", // TODO(content)
     hours: "Luni – Vineri, 09:00 – 18:00", // TODO(content)
+    /** Same hours in schema.org format, for search engines. */
+    openingHours: "Mo-Fr 09:00-18:00", // TODO(content)
     serviceArea: "[Zona deservită]", // TODO(content)
   },
 
