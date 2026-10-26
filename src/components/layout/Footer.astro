@@ -23,6 +23,7 @@ const link = "inline-flex min-h-11 items-center text-ink no-underline underline-
       <ul class="m-0 flex list-none flex-col p-0 md:gap-2">
         <li><a href={url("/")} class={link}>Acasă</a></li>
         {navLinks.map((l) => <li><a href={l.href} class={link}>{l.label}</a></li>)}
+        <li><a href={url("/contact")} class={link}>Contact</a></li>
       </ul>
     </nav>
 
