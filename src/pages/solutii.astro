@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/ui/Section.astro";
+import SectionHeading from "../components/ui/SectionHeading.astro";
+import Button from "../components/ui/Button.astro";
+import ImagePlaceholder from "../components/ui/ImagePlaceholder.astro";
+import CtaBand from "../components/sections/CtaBand.astro";
+import { services } from "../data/services";
+---
+<BaseLayout title="Soluții"
+  description="CCTV, antifracție, interfonie, control acces, automatizări porți, service, consultanță și proiectare pentru sisteme de securitate.">
+  <Section class="pb-0 md:pb-0">
+    <SectionHeading as="h1" size="display" eyebrow="Soluții"
+      lead="De la camere de supraveghere la control acces, proiectăm și instalăm sisteme care lucrează împreună, întreținute de aceeași echipă.">
+      Soluții de securitate.
+    </SectionHeading>
+  </Section>
+
+  <Section>
+    <div class="grid gap-12 lg:grid-cols-[14rem_1fr]">
+      <nav aria-label="Soluții pe această pagină" class="lg:sticky lg:top-28 lg:self-start">
+        <ul class="m-0 flex list-none flex-wrap gap-x-6 gap-y-3 p-0 lg:flex-col lg:gap-0">
+          {services.map(({ slug, name }) => (
+            <li class="lg:border-t lg:border-line">
+              <a href={`#${slug}`}
+                class="inline-block py-1 text-eyebrow uppercase text-ink no-underline transition-colors duration-150 hover:text-accent-ink lg:py-3">
+                {name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="flex flex-col gap-12 md:gap-24">
+        {services.map(({ slug, name, line, summary, details, Icon }) => (
+          <article id={slug} class="grid scroll-mt-28 gap-8 border-t border-line pt-12 md:grid-cols-2 md:gap-12">
+            <div class="flex flex-col items-start gap-4">
+              <span class="inline-flex size-8 text-accent light:text-ink [&>svg]:size-full" aria-hidden="true">
+                <Icon />
+              </span>
+              <h2 class="m-0 text-title uppercase md:text-headline">{name}</h2>
+              <span class="rule-gold" aria-hidden="true" />
+              <p class="m-0 text-body-lg text-ink">{line}</p>
+              <p class="m-0 max-w-[65ch] text-ink-muted">{summary}</p>
+              <ul class="m-0 flex list-none flex-col gap-2 p-0">
+                {details.map((d) => (
+                  <li class="flex items-baseline gap-3 text-small text-ink">
+                    <span class="inline-block size-1.5 shrink-0 -translate-y-0.5 bg-accent" aria-hidden="true" />
+                    {d}
+                  </li>
+                ))}
+              </ul>
+              <Button href={`/contact?serviciu=${slug}#oferta`} variant="ghost">
+                Solicită ofertă<span class="sr-only"> pentru {name}</span>
+              </Button>
+            </div>
+            <ImagePlaceholder chamfer="tr" class="md:self-start" />
+          </article>
+        ))}
+      </div>
+    </div>
+  </Section>
+
+  <CtaBand heading="Nu știți ce sistem vă trebuie?"
+    lead="Începem cu o discuție și o evaluare la fața locului, apoi vă propunem soluția potrivită." />
+</BaseLayout>
