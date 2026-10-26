@@ -1,0 +1,114 @@
+---
+// Homepage services: image on the left, the eight services on the right. Hovering or focusing a
+// service shows its image; when nobody interacts, it moves to the next one every `interval` ms.
+// Each row links to its section on /solutii, so the list works without JS too.
+import SectionHeading from "../ui/SectionHeading.astro";
+import Button from "../ui/Button.astro";
+import { services } from "../../data/services";
+import { cta } from "../../data/site";
+import { url } from "../../lib/url";
+
+interface Props {
+  /** Time each service stays selected while autoplaying, in ms. */
+  interval?: number;
+}
+const { interval = 5000 } = Astro.props;
+
+// TODO(content): replace with one photo per service (design doc §6: low-key, dark hardware, warm light).
+const photoHints: Record<string, string> = {
+  cctv: "Cameră IP pe fațadă, la amurg",
+  antifractie: "Tastatură de alarmă, lumină caldă",
+  interfonie: "Videointerfon la intrare",
+  "control-acces": "Cititor de cartele pe perete întunecat",
+  "automatizari-porti": "Poartă culisantă, casă modernă la amurg",
+  "service-mentenanta": "Tehnician la un rack de echipamente",
+  consultanta: "Discuție pe un plan, lumină caldă",
+  proiectare: "Plan tehnic cu amplasarea camerelor",
+};
+---
+<div class="flex flex-col gap-14">
+  <div class="flex flex-wrap items-end justify-between gap-6">
+    <SectionHeading eyebrow="Servicii">Opt servicii. Un singur partener.</SectionHeading>
+    <Button href={cta.secondary.href} variant="secondary">{cta.secondary.label}</Button>
+  </div>
+
+  <div data-services-showcase data-playing style={`--svc-interval:${interval}ms`}
+    class="grid gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
+    <div class="chamfer-lg relative aspect-[4/3] bg-surface-alt lg:aspect-auto" aria-hidden="true">
+      {services.map(({ slug }, i) => (
+        <div data-pane data-active={i === 0 ? "" : undefined}
+          class="absolute inset-0 flex items-center justify-center p-8 opacity-0 transition-opacity duration-300 data-active:opacity-100">
+          <span class="text-center text-eyebrow uppercase text-ink">{photoHints[slug]}</span>
+        </div>
+      ))}
+    </div>
+
+    <ul class="m-0 flex list-none flex-col p-0">
+      {services.map(({ slug, name, line, Icon }, i) => (
+        <li>
+          <a href={url(`/solutii#${slug}`)} data-item data-active={i === 0 ? "" : undefined}
+            class="group relative flex min-h-21 items-center gap-5 border-b border-line py-4 pr-1 text-ink no-underline">
+            <span class="w-6 shrink-0 text-eyebrow text-ink-muted group-data-active:text-accent-ink">
+              {String(i + 1).padStart(2, "0")}
+            </span>
+            <span class="h-0.5 w-0 shrink-0 bg-accent transition-[width] duration-150 group-data-active:w-10" aria-hidden="true" />
+            <span class="flex min-w-0 flex-col gap-1">
+              <span class="flex items-center gap-3">
+                <span class="text-title uppercase text-ink-muted transition-colors duration-150 group-hover:text-ink group-data-active:text-ink">{name}</span>
+                <Icon class="size-6 shrink-0 text-ink-muted group-data-active:text-accent light:group-data-active:text-ink" />
+              </span>
+              <span class="text-small text-ink-muted">{line}</span>
+            </span>
+            <span data-progress class="absolute -bottom-px left-0 h-0.5 w-0 bg-accent" aria-hidden="true" />
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  /* The progress bar doubles as the autoplay clock: its animationend selects the next service.
+     global.css turns animations off for prefers-reduced-motion, which also stops autoplay. */
+  [data-playing] [data-active] [data-progress] {
+    animation: svc-progress var(--svc-interval) linear forwards;
+  }
+  @keyframes svc-progress {
+    to { width: 100%; }
+  }
+</style>
+
+<script>
+  for (const root of document.querySelectorAll<HTMLElement>("[data-services-showcase]")) {
+    const items = [...root.querySelectorAll<HTMLElement>("[data-item]")];
+    const panes = [...root.querySelectorAll<HTMLElement>("[data-pane]")];
+    let active = 0;
+    let hovered = false;
+    let focused = false;
+    let visible = true;
+
+    const select = (i: number) => {
+      if (i === active) return;
+      items[active].removeAttribute("data-active");
+      panes[active].removeAttribute("data-active");
+      active = i;
+      items[i].setAttribute("data-active", "");
+      panes[i].setAttribute("data-active", "");
+    };
+    const update = () => root.toggleAttribute("data-playing", !hovered && !focused && visible);
+
+    items.forEach((item, i) => {
+      item.addEventListener("pointerenter", () => select(i));
+      item.addEventListener("focus", () => select(i));
+      item.querySelector("[data-progress]")!.addEventListener("animationend", () => select((i + 1) % items.length));
+    });
+
+    root.addEventListener("pointerenter", () => { hovered = true; update(); });
+    root.addEventListener("pointerleave", () => { hovered = false; update(); });
+    root.addEventListener("focusin", () => { focused = true; update(); });
+    root.addEventListener("focusout", (e) => {
+      if (!root.contains(e.relatedTarget as Node | null)) { focused = false; update(); }
+    });
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; update(); }).observe(root);
+  }
+</script>
