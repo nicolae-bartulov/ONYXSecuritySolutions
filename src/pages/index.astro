@@ -3,8 +3,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/ui/Section.astro";
 import SectionHeading from "../components/ui/SectionHeading.astro";
 import Button from "../components/ui/Button.astro";
-import ServiceCard from "../components/ui/ServiceCard.astro";
 import HeroPanther from "../components/sections/HeroPanther.astro";
+import ServicesShowcase from "../components/sections/ServicesShowcase.astro";
 import ProjectCard from "../components/sections/ProjectCard.astro";
 import CtaBand from "../components/sections/CtaBand.astro";
 import landscapeLogo from "../assets/brand/logos/onyx-landscape-on-dark.png";
@@ -64,14 +64,7 @@ const audiences = [
   </Section>
 
   <Section>
-    <SectionHeading eyebrow="Soluții">Tehnologie pentru siguranță reală.</SectionHeading>
-    <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-      {services.map(({ slug, name, line, Icon }) => (
-        <ServiceCard title={name} description={line} href={url(`/solutii#${slug}`)}>
-          <Icon slot="icon" />
-        </ServiceCard>
-      ))}
-    </div>
+    <ServicesShowcase />
   </Section>
 
   <Section>
