@@ -1,13 +1,9 @@
 ---
-import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/ui/Section.astro";
 import SectionHeading from "../components/ui/SectionHeading.astro";
-import Button from "../components/ui/Button.astro";
-import ImagePlaceholder from "../components/ui/ImagePlaceholder.astro";
 import CtaBand from "../components/sections/CtaBand.astro";
-import { services } from "../data/services";
-import { url } from "../lib/url";
+import SolutionsList from "../components/sections/SolutionsList.astro";
 ---
 <BaseLayout title="Soluții"
   description="CCTV, antifracție, interfonie, control acces, automatizări porți, service, consultanță și proiectare pentru sisteme de securitate.">
@@ -19,53 +15,7 @@ import { url } from "../lib/url";
   </Section>
 
   <Section>
-    <div class="grid gap-12 lg:grid-cols-[14rem_1fr]">
-      <nav aria-label="Soluții pe această pagină" class="lg:sticky lg:top-28 lg:self-start">
-        <ul class="m-0 flex list-none flex-wrap gap-x-6 p-0 lg:flex-col">
-          {services.map(({ slug, name }) => (
-            <li class="lg:border-t lg:border-line">
-              <a href={`#${slug}`}
-                class="inline-block py-3.5 text-eyebrow uppercase text-ink no-underline transition-colors duration-150 hover:text-accent-ink lg:py-3">
-                {name}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-
-      <div class="flex flex-col gap-12 md:gap-24">
-        {services.map(({ slug, name, line, summary, details, Icon, image, imageAlt }) => (
-          <article id={slug} class="grid scroll-mt-28 gap-8 border-t border-line pt-12 md:grid-cols-2 md:gap-12">
-            <div class="flex flex-col items-start gap-4">
-              <span class="inline-flex size-8 text-accent light:text-ink [&>svg]:size-full" aria-hidden="true">
-                <Icon />
-              </span>
-              <h2 class="m-0 text-title uppercase md:text-headline">{name}</h2>
-              <span class="rule-gold" aria-hidden="true" />
-              <p class="m-0 text-body-lg text-ink">{line}</p>
-              <p class="m-0 max-w-[65ch] text-ink-muted">{summary}</p>
-              <ul class="m-0 flex list-none flex-col gap-2 p-0">
-                {details.map((d) => (
-                  <li class="flex items-baseline gap-3 text-small text-ink">
-                    <span class="inline-block size-1.5 shrink-0 -translate-y-0.5 bg-accent" aria-hidden="true" />
-                    {d}
-                  </li>
-                ))}
-              </ul>
-              <Button href={url(`/contact?serviciu=${slug}#oferta`)} variant="ghost">
-                Solicită ofertă<span class="sr-only"> pentru {name}</span>
-              </Button>
-            </div>
-            {image ? (
-              <Image src={image} alt={imageAlt ?? name} widths={[640, 960]} sizes="(min-width: 768px) 40vw, 100vw"
-                class="chamfer-tr aspect-[4/3] w-full object-cover md:self-start" />
-            ) : (
-              <ImagePlaceholder chamfer="tr" class="md:self-start" />
-            )}
-          </article>
-        ))}
-      </div>
-    </div>
+    <SolutionsList />
   </Section>
 
   <CtaBand heading="Nu știți ce sistem vă trebuie?"
