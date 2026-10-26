@@ -1,0 +1,46 @@
+---
+// Graphite band in dark: only text-ink and accent on it (design doc §3.3), so no text-ink-muted here.
+import Logo from "../ui/Logo.astro";
+import Eyebrow from "../ui/Eyebrow.astro";
+import { navLinks, site } from "../../data/site";
+
+const year = new Date().getFullYear();
+const link = "text-ink no-underline transition-colors duration-150 hover:text-accent-ink";
+---
+<footer class="bg-surface-alt px-4 py-12 text-small text-ink md:px-12">
+  <div class="mx-auto grid max-w-7xl gap-12 md:grid-cols-[2fr_1fr_1fr]">
+    <div class="flex flex-col items-start gap-6">
+      <Logo variant="landscape" height={32} />
+      <Eyebrow rule="both">{site.tagline}</Eyebrow>
+      <p class="m-0 max-w-[38ch]">{site.description}</p>
+    </div>
+
+    <nav aria-labelledby="footer-nav" class="flex flex-col gap-4">
+      <h2 id="footer-nav" class="m-0 text-eyebrow uppercase text-ink">Navigație</h2>
+      <ul class="m-0 flex list-none flex-col gap-2 p-0">
+        <li><a href="/" class={link}>Acasă</a></li>
+        {navLinks.map((l) => <li><a href={l.href} class={link}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="flex flex-col gap-4">
+      <h2 class="m-0 text-eyebrow uppercase text-ink">Contact</h2>
+      <address class="flex flex-col gap-2 not-italic">
+        <a href={site.contact.phoneHref} class={link}>{site.contact.phone}</a>
+        <a href={`mailto:${site.contact.email}`} class={link}>{site.contact.email}</a>
+        <span>{site.contact.address}</span>
+        <span>{site.contact.hours}</span>
+      </address>
+    </div>
+  </div>
+
+  <div class="mx-auto mt-12 flex max-w-7xl flex-col gap-2 border-t border-line-strong pt-6 md:flex-row md:flex-wrap md:justify-between md:gap-6">
+    <p class="m-0">
+      {site.legal.companyName} · CUI {site.legal.cui} · Reg. Com. {site.legal.regCom} · Licență IGPR {site.legal.igprLicense}
+    </p>
+    <p class="m-0 flex flex-wrap gap-x-6 gap-y-2">
+      <a href="/politica-de-confidentialitate" class={link}>Politica de confidențialitate</a>
+      <span>© {year} {site.name}</span>
+    </p>
+  </div>
+</footer>

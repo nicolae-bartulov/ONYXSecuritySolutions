@@ -1,0 +1,37 @@
+---
+// Square checkbox with a gold fill when checked. The label goes in the default slot (it may contain links).
+interface Props {
+  id: string;
+  name?: string;
+  value?: string;
+  required?: boolean;
+  hint?: string;
+  error?: string;
+  class?: string;
+}
+const { id, name = id, value = "da", required, hint, error, class: cls } = Astro.props;
+const hintId = hint || error ? `${id}-hint` : undefined;
+---
+<div class:list={["flex flex-col gap-2 min-w-0", cls]}>
+  <div class="flex items-start gap-3">
+    <span class="relative mt-0.5 inline-flex size-5 shrink-0">
+      <input id={id} name={name} value={value} type="checkbox" required={required}
+        aria-describedby={hintId} aria-invalid={error ? "true" : undefined}
+        class:list={[
+          "peer size-5 appearance-none rounded-none bg-surface cursor-pointer transition-colors duration-150",
+          "checked:bg-accent checked:border-accent focus-visible:outline-2 focus-visible:outline-focus",
+          error ? "border-2 border-ink" : "border border-line-strong",
+        ]} />
+      <svg class="pointer-events-none absolute inset-0 hidden size-5 text-on-accent peer-checked:block" viewBox="0 0 20 20"
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true">
+        <path d="M5 10l3.5 3.5L15 7" />
+      </svg>
+    </span>
+    <label for={id} class="text-small text-ink cursor-pointer [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-accent-ink">
+      <slot />
+    </label>
+  </div>
+  {error
+    ? <p id={hintId} class="m-0 text-small font-semibold text-ink"><span aria-hidden="true">! </span>{error}</p>
+    : hint && <p id={hintId} class="m-0 text-small text-ink-muted">{hint}</p>}
+</div>

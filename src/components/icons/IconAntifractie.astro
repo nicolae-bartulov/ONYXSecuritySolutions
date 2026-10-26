@@ -1,0 +1,11 @@
+---
+// Placeholder in the Onyx icon style (32px grid, 1.5px stroke, square caps).
+// Replace with the official icon when the set is supplied (design doc §7).
+import type { HTMLAttributes } from "astro/types";
+type Props = HTMLAttributes<"svg">;
+---
+<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true" {...Astro.props}>
+  <path d="M16 4l10 4v7c0 6.5-4.3 11-10 13-5.7-2-10-6.5-10-13V8z" />
+  <path d="M12 15h8v7h-8z" />
+  <path d="M13.5 15v-2a2.5 2.5 0 0 1 5 0v2" />
+</svg>

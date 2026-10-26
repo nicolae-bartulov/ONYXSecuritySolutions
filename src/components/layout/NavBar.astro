@@ -1,0 +1,78 @@
+---
+import Logo from "../ui/Logo.astro";
+import Button from "../ui/Button.astro";
+import { cta, isActive, navLinks } from "../../data/site";
+
+const path = Astro.url.pathname;
+---
+<header class="sticky top-0 z-50 flex flex-wrap items-center gap-x-3 px-4 py-4 bg-surface border-b border-line sm:gap-x-8 md:px-6">
+  <a href="/" aria-label="Onyx Security Solutions, acasă" class="inline-flex">
+    {/* Below sm the landscape logo and the CTA don't fit side by side, so the panther icon stands in. */}
+    <span class="sm:hidden"><Logo variant="icon" height={40} /></span>
+    <span class="hidden sm:block"><Logo variant="landscape" height={40} /></span>
+  </a>
+  <nav aria-label="Principal" class="ml-auto hidden md:flex flex-wrap gap-6">
+    {navLinks.map((l) => {
+      const active = isActive(path, l.href);
+      return (
+        <a href={l.href} aria-current={active ? "page" : undefined}
+          class:list={[
+            "py-2 text-eyebrow uppercase text-ink no-underline border-b-2 transition-colors duration-150 hover:text-accent-ink",
+            active ? "border-accent" : "border-transparent",
+          ]}>{l.label}</a>
+      );
+    })}
+  </nav>
+  <Button href={cta.primary.href} size="sm" class="ml-auto md:ml-0">{cta.primary.label}</Button>
+  <button type="button" data-menu-toggle aria-expanded="false" aria-controls="meniu-mobil" aria-label="Meniu"
+    class="inline-flex size-11 items-center justify-center text-ink cursor-pointer transition-colors duration-150 hover:text-accent-ink md:hidden">
+    <svg class="size-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true">
+      <path data-menu-open d="M3 6h18M3 12h18M3 18h18" />
+      <path data-menu-close class="hidden" d="M5 5l14 14M19 5L5 19" />
+    </svg>
+  </button>
+  <nav id="meniu-mobil" aria-label="Principal, mobil" hidden class="w-full pt-4 md:hidden">
+    <ul class="m-0 flex list-none flex-col p-0">
+      {navLinks.map((l) => {
+        const active = isActive(path, l.href);
+        return (
+          <li class="border-t border-line">
+            <a href={l.href} aria-current={active ? "page" : undefined}
+              class:list={[
+                "flex items-center gap-3 py-4 text-title uppercase no-underline transition-colors duration-150 hover:text-accent-ink",
+                active ? "text-accent-ink" : "text-ink",
+              ]}>
+              {active && <span class="rule-gold" aria-hidden="true" />}
+              {l.label}
+            </a>
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
+  const menu = document.getElementById("meniu-mobil");
+
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      menu.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      toggle.querySelector("[data-menu-open]")?.classList.toggle("hidden", open);
+      toggle.querySelector("[data-menu-close]")?.classList.toggle("hidden", !open);
+    };
+
+    toggle.addEventListener("click", () => setOpen(toggle.getAttribute("aria-expanded") !== "true"));
+    menu.addEventListener("click", (e) => {
+      if ((e.target as Element).closest("a")) setOpen(false);
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !menu.hidden) {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  }
+</script>

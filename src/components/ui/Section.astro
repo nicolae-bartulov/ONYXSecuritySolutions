@@ -1,0 +1,15 @@
+---
+// Page section with the standard padding and gutters (design doc §3.5) and a centered content width.
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"section"> {
+  as?: "section" | "div";
+  /** Alternate band: bg-surface-alt. In dark keep text `text-ink` on it. */
+  band?: boolean;
+  class?: string;
+}
+const { as: Tag = "section", band, class: cls, ...rest } = Astro.props;
+---
+<Tag class:list={["px-4 py-12 md:px-12 md:py-24", band && "bg-surface-alt", cls]} {...rest}>
+  <div class="mx-auto max-w-7xl"><slot /></div>
+</Tag>
