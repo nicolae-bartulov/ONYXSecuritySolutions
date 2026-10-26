@@ -22,6 +22,13 @@ export const site = {
     regCom: "[J00/000/0000]", // TODO(content)
     igprLicense: "[Nr. licență IGPR]", // TODO(content)
   },
+
+  /**
+   * Where the quote form posts. Empty until hosting is chosen: the form then shows a
+   * "coming soon" message with the phone number instead of submitting.
+   * Netlify Forms: "/" (and add data-netlify to the form); Formspree and similar: their URL.
+   */
+  formEndpoint: "", // TODO(content)
 };
 
 export const navLinks = [
