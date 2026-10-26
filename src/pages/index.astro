@@ -9,6 +9,7 @@ import ProjectCard from "../components/sections/ProjectCard.astro";
 import CtaBand from "../components/sections/CtaBand.astro";
 import landscapeLogo from "../assets/brand/logos/onyx-landscape-on-dark.png";
 import { cta, site } from "../data/site";
+import { url } from "../lib/url";
 import { services } from "../data/services";
 import { getProjects } from "../data/projects";
 
@@ -21,9 +22,9 @@ const jsonLd = {
   legalName: site.legal.companyName,
   description: site.description,
   slogan: site.tagline,
-  url: new URL("/", Astro.site).href,
+  url: new URL(url("/"), Astro.site).href,
   logo: new URL(landscapeLogo.src, Astro.site).href,
-  image: new URL("/og-default.png", Astro.site).href,
+  image: new URL(url("/og-default.png"), Astro.site).href,
   telephone: site.contact.phoneHref.replace("tel:", ""),
   email: site.contact.email,
   address: { "@type": "PostalAddress", streetAddress: site.contact.address, addressCountry: "RO" },
@@ -66,7 +67,7 @@ const audiences = [
     <SectionHeading eyebrow="Soluții">Tehnologie pentru siguranță reală.</SectionHeading>
     <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
       {services.map(({ slug, name, line, Icon }) => (
-        <ServiceCard title={name} description={line} href={`/solutii#${slug}`}>
+        <ServiceCard title={name} description={line} href={url(`/solutii#${slug}`)}>
           <Icon slot="icon" />
         </ServiceCard>
       ))}
@@ -102,7 +103,7 @@ const audiences = [
     <Section class="pt-0 md:pt-0">
       <div class="flex flex-wrap items-end justify-between gap-6">
         <SectionHeading eyebrow="Proiecte">Proiecte recente.</SectionHeading>
-        <Button href="/proiecte" variant="ghost">Toate proiectele</Button>
+        <Button href={url("/proiecte")} variant="ghost">Toate proiectele</Button>
       </div>
       <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
         {projects.map((project) => <ProjectCard project={project} />)}

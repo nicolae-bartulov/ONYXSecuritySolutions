@@ -4,6 +4,7 @@
 import Logo from "../ui/Logo.astro";
 import Eyebrow from "../ui/Eyebrow.astro";
 import { navLinks, site } from "../../data/site";
+import { url } from "../../lib/url";
 
 const year = new Date().getFullYear();
 // min-h-11: 44px tap targets on phones; regular line height from md up.
@@ -20,7 +21,7 @@ const link = "inline-flex min-h-11 items-center text-ink no-underline underline-
     <nav aria-labelledby="footer-nav" class="flex flex-col gap-4">
       <h2 id="footer-nav" class="m-0 text-eyebrow uppercase text-ink">Navigație</h2>
       <ul class="m-0 flex list-none flex-col p-0 md:gap-2">
-        <li><a href="/" class={link}>Acasă</a></li>
+        <li><a href={url("/")} class={link}>Acasă</a></li>
         {navLinks.map((l) => <li><a href={l.href} class={link}>{l.label}</a></li>)}
       </ul>
     </nav>
@@ -41,7 +42,7 @@ const link = "inline-flex min-h-11 items-center text-ink no-underline underline-
       {site.legal.companyName} · CUI {site.legal.cui} · Reg. Com. {site.legal.regCom} · Licență IGPR {site.legal.igprLicense}
     </p>
     <p class="m-0 flex flex-wrap items-center gap-x-6 md:gap-y-2">
-      <a href="/politica-de-confidentialitate" class={link}>Politica de confidențialitate</a>
+      <a href={url("/politica-de-confidentialitate")} class={link}>Politica de confidențialitate</a>
       <span>© {year} {site.name}</span>
     </p>
   </div>

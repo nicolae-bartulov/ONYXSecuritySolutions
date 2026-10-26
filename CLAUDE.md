@@ -17,6 +17,7 @@ A fully static site (no SSR adapter). All pages exist; most company details and 
 - `src/components/layout/` — `NavBar` (desktop links from `lg`, menu button below), `Footer`.
 - `src/components/sections/` — page sections: `CtaBand`, `ProjectCard`, `HeroPanther`, `QuoteForm`.
 - `src/components/icons/` — eight placeholder line icons, one per service, to be replaced by the official set.
+- `src/lib/url.ts` — `url()` prefixes root-relative paths with the base path. GitHub Pages serves the site under `/ONYXSecuritySolutions` (the deploy workflow passes `--base`), so every internal link, `public/` file and absolute URL must go through `url()`; a bare `href="/contact"` breaks there.
 - `src/data/` — `site.ts` (contact, legal, nav links, CTAs, `formEndpoint`), `services.ts` (the eight services in order, with icon), `service-slugs.ts`, `projects.ts` (`getProjects()`).
 - `src/content/proiecte/*.md` — project collection, schema in `src/content.config.ts`. `draft: true` entries show only in `astro dev`.
 - `src/pages/` — `/`, `/solutii` (all services, anchors `#<slug>`), `/proiecte`, `/despre-noi`, `/contact` (light), `/politica-de-confidentialitate` (light), `404`, and `robots.txt.ts`.

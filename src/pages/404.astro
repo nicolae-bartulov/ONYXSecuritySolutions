@@ -5,6 +5,7 @@ import SectionHeading from "../components/ui/SectionHeading.astro";
 import Button from "../components/ui/Button.astro";
 import Logo from "../components/ui/Logo.astro";
 import { cta } from "../data/site";
+import { url } from "../lib/url";
 ---
 <BaseLayout title="Pagina nu a fost găsită" description="Pagina căutată nu există sau a fost mutată.">
   <Section>
@@ -15,7 +16,7 @@ import { cta } from "../data/site";
         Pagina nu a fost găsită.
       </SectionHeading>
       <div class="flex flex-wrap justify-center gap-4">
-        <Button href="/" variant="secondary">Pagina principală</Button>
+        <Button href={url("/")} variant="secondary">Pagina principală</Button>
         <Button href={cta.primary.href}>{cta.primary.label}</Button>
       </div>
     </div>

@@ -6,6 +6,7 @@ import Button from "../components/ui/Button.astro";
 import ImagePlaceholder from "../components/ui/ImagePlaceholder.astro";
 import CtaBand from "../components/sections/CtaBand.astro";
 import { services } from "../data/services";
+import { url } from "../lib/url";
 ---
 <BaseLayout title="Soluții"
   description="CCTV, antifracție, interfonie, control acces, automatizări porți, service, consultanță și proiectare pentru sisteme de securitate.">
@@ -50,7 +51,7 @@ import { services } from "../data/services";
                   </li>
                 ))}
               </ul>
-              <Button href={`/contact?serviciu=${slug}#oferta`} variant="ghost">
+              <Button href={url(`/contact?serviciu=${slug}#oferta`)} variant="ghost">
                 Solicită ofertă<span class="sr-only"> pentru {name}</span>
               </Button>
             </div>
