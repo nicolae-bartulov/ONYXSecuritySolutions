@@ -1,5 +1,4 @@
-// Service identifiers, kept apart from services.ts so the content config can use them
-// without importing the icon components.
+// Service identifiers, in the order of design doc §5. services.ts types each service's `slug` with them.
 export const serviceSlugs = [
   "cctv",
   "antifractie",
