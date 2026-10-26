@@ -37,7 +37,6 @@ export const site = {
 // Contact is reached through the "Solicită ofertă" button, so it has no nav link (the footer adds one).
 export const navLinks = [
   { label: "Soluții", href: url("/solutii") },
-  { label: "Proiecte", href: url("/proiecte") },
   { label: "Despre noi", href: url("/despre-noi") },
 ];
 
