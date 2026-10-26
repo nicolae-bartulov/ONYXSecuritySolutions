@@ -4,15 +4,10 @@ import type { HTMLAttributes } from "astro/types";
 
 interface Props extends HTMLAttributes<"section"> {
   as?: "section" | "div";
-  /**
-   * Alternate band: bg-surface-alt. Gold text is too low-contrast on graphite (~4.2:1), so
-   * accent-colored text (eyebrows) falls back to ink here; gold fills and rules stay gold.
-   */
-  band?: boolean;
   class?: string;
 }
-const { as: Tag = "section", band, class: cls, ...rest } = Astro.props;
+const { as: Tag = "section", class: cls, ...rest } = Astro.props;
 ---
-<Tag class:list={["px-4 py-12 md:px-12 md:py-24", band && "bg-surface-alt [--accent-ink:var(--ink)]", cls]} {...rest}>
+<Tag class:list={["px-4 py-12 md:px-12 md:py-24", cls]} {...rest}>
   <div class="mx-auto max-w-7xl"><slot /></div>
 </Tag>
