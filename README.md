@@ -17,3 +17,4 @@ Requires Node >= 22.23.4.
 | `npx astro check` | Type-check `.astro` files |
 | `node scripts/trim-logos.mjs` | Crop transparent padding from the brand logos |
 | `node scripts/make-favicons.mjs` | Regenerate favicons from the icon logo |
+| `node scripts/make-og-image.mjs` | Regenerate the default link-preview image |
