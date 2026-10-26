@@ -1,1 +1,167 @@
 @import "tailwindcss";
+
+/* =========================================================================
+   Onyx Security — Tailwind v4 theme
+   Source: docs/design-system.md
+   Dark is the default theme. Light is opt-in with data-theme="light"
+   on <html> or on any wrapper element.
+   ========================================================================= */
+
+/* ---------- Theme variants ---------- */
+
+/* light: matches anything inside data-theme="light" */
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+
+/* dark: follows the site theme, not the OS setting */
+@custom-variant dark (&:not(:where([data-theme="light"], [data-theme="light"] *)));
+
+/* ---------- Theme values (switch per theme) ---------- */
+
+:root {
+  --surface: #0f0f0f;      /* brand-onyx */
+  --surface-alt: #474747;  /* brand-graphite */
+  --ink: #ffffff;          /* brand-white */
+  --ink-muted: #aaaaaa;    /* brand-silver */
+  --line: #474747;         /* brand-graphite */
+  --line-strong: #aaaaaa;  /* brand-silver */
+  --accent: #e3a600;       /* brand-gold */
+  --on-accent: #0f0f0f;    /* brand-onyx */
+  --accent-ink: #e3a600;   /* brand-gold */
+  --focus: #e3a600;        /* brand-gold */
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --surface: #ffffff;      /* brand-white */
+  --surface-alt: #e2e2e2;  /* brand-mist */
+  --ink: #0f0f0f;          /* brand-onyx */
+  --ink-muted: #474747;    /* brand-graphite */
+  --line: #e2e2e2;         /* brand-mist */
+  --line-strong: #474747;  /* brand-graphite */
+  --accent: #e3a600;       /* brand-gold */
+  --on-accent: #0f0f0f;    /* brand-onyx */
+  --accent-ink: #0f0f0f;   /* gold fails as text on white, so onyx */
+  --focus: #0f0f0f;        /* brand-onyx */
+  color-scheme: light;
+}
+
+/* ---------- Semantic colors (theme-aware utilities) ---------- */
+/* bg-surface, text-ink, border-line, bg-accent, text-on-accent, outline-focus … */
+
+@theme inline {
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-focus: var(--focus);
+}
+
+/* ---------- Static tokens ---------- */
+
+@theme {
+  /* Brand palette: fixed in both themes. Prefer the semantic colors above. */
+  --color-brand-onyx: #0f0f0f;
+  --color-brand-gold: #e3a600;
+  --color-brand-white: #ffffff;
+  --color-brand-silver: #aaaaaa;
+  --color-brand-mist: #e2e2e2;
+  --color-brand-graphite: #474747;
+
+  /* Fonts */
+  --font-sans: "Montserrat Variable", "Montserrat", "Helvetica Neue", Arial, sans-serif;
+
+  /* Type scale: text-display … text-button.
+     display, headline, title, eyebrow and button are always paired with `uppercase`. */
+  --text-display: 56px;
+  --text-display--line-height: 60px;
+  --text-display--letter-spacing: 0.08em;
+  --text-display--font-weight: 500;
+
+  --text-headline: 36px;
+  --text-headline--line-height: 44px;
+  --text-headline--letter-spacing: 0.08em;
+  --text-headline--font-weight: 500;
+
+  --text-title: 20px;
+  --text-title--line-height: 28px;
+  --text-title--letter-spacing: 0.06em;
+  --text-title--font-weight: 600;
+
+  --text-eyebrow: 12px;
+  --text-eyebrow--line-height: 16px;
+  --text-eyebrow--letter-spacing: 0.24em;
+  --text-eyebrow--font-weight: 500;
+
+  --text-body-lg: 18px;
+  --text-body-lg--line-height: 28px;
+
+  --text-body: 16px;
+  --text-body--line-height: 26px;
+
+  --text-small: 14px;
+  --text-small--line-height: 22px;
+
+  --text-button: 13px;
+  --text-button--line-height: 16px;
+  --text-button--letter-spacing: 0.14em;
+  --text-button--font-weight: 600;
+
+  /* Spacing: 4px base, same as the Onyx scale.
+     p-1 4 · p-2 8 · p-3 12 · p-4 16 · p-6 24 · p-8 32 · p-12 48 · p-24 96 */
+  --spacing: 4px;
+
+  /* Radius: square brand. rounded-none for cards, images, inputs;
+     rounded-sm only for buttons and badges. */
+  --radius-sm: 2px;
+
+  /* Shadows: none in the design system. Tailwind's defaults are left in place
+     but should not be used in UI. */
+}
+
+/* ---------- Brand utilities ---------- */
+
+/* Cut corners from the octagonal O in the ONYX wordmark */
+@utility chamfer-sm {
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+@utility chamfer-tr {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 0 100%);
+}
+@utility chamfer-lg {
+  clip-path: polygon(20px 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%, 0 20px);
+}
+
+/* The 40 x 2px gold rule under headings and service titles */
+@utility rule-gold {
+  display: block;
+  width: 40px;
+  height: 2px;
+  background-color: var(--accent);
+}
+
+/* ---------- Base ---------- */
+
+@layer base {
+  body {
+    @apply bg-surface font-sans text-body text-ink antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
+}
