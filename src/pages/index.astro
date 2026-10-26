@@ -1,26 +1,37 @@
 ---
-// Temporary home: exercises the layout and components until the real page is built (Phase 3).
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/ui/Section.astro";
 import SectionHeading from "../components/ui/SectionHeading.astro";
 import Button from "../components/ui/Button.astro";
 import ServiceCard from "../components/ui/ServiceCard.astro";
-import ImagePlaceholder from "../components/ui/ImagePlaceholder.astro";
-import TextField from "../components/ui/TextField.astro";
-import SelectField from "../components/ui/SelectField.astro";
-import CheckboxField from "../components/ui/CheckboxField.astro";
+import HeroPanther from "../components/sections/HeroPanther.astro";
+import ProjectCard from "../components/sections/ProjectCard.astro";
+import CtaBand from "../components/sections/CtaBand.astro";
 import { cta } from "../data/site";
-import { serviceOptions, services } from "../data/services";
+import { services } from "../data/services";
 import { getProjects } from "../data/projects";
 
-const projects = await getProjects();
+const projects = (await getProjects()).slice(0, 3);
+
+const steps = [
+  { title: "Consultanță", text: "Discutăm nevoile dumneavoastră și evaluăm riscurile la fața locului." },
+  { title: "Proiectare", text: "Alegem echipamentele și planificăm fiecare punct al sistemului." },
+  { title: "Instalare", text: "Montăm, configurăm și testăm sistemul, apoi vă arătăm cum îl folosiți." },
+  { title: "Mentenanță", text: "Verificăm periodic sistemul și intervenim rapid când este nevoie." },
+];
+
+const audiences = [
+  { title: "Locuințe", text: "Case și apartamente protejate discret, cu control de pe telefon." },
+  { title: "Companii", text: "Birouri, depozite și spații comerciale, cu acces controlat pentru angajați." },
+  { title: "Instituții", text: "Școli, clădiri publice și sedii, cu sisteme proiectate conform legislației." },
+];
 ---
 <BaseLayout>
   <Section>
     <div class="grid items-center gap-12 md:grid-cols-2">
       <div class="flex flex-col gap-8">
         <SectionHeading as="h1" size="display" eyebrow="Onyx Security Solutions"
-          lead="Sisteme de securitate pentru locuințe, companii și instituții.">
+          lead="Sisteme de securitate pentru locuințe, companii și instituții. Proiectate, instalate și întreținute de aceeași echipă.">
           Consult. Design. Secure.
         </SectionHeading>
         <div class="flex flex-wrap gap-4">
@@ -28,7 +39,7 @@ const projects = await getProjects();
           <Button href={cta.secondary.href} variant="secondary" size="lg">{cta.secondary.label}</Button>
         </div>
       </div>
-      <ImagePlaceholder ratio="4/3" chamfer="lg" />
+      <HeroPanther />
     </div>
   </Section>
 
@@ -43,37 +54,42 @@ const projects = await getProjects();
     </div>
   </Section>
 
+  <Section>
+    <SectionHeading eyebrow="Cum lucrăm">De la evaluare la mentenanță.</SectionHeading>
+    <ol class="m-0 mt-8 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-4">
+      {steps.map((step, i) => (
+        <li class="flex flex-col gap-3 border-t border-line pt-6">
+          <span class="text-eyebrow uppercase text-accent-ink">{String(i + 1).padStart(2, "0")}</span>
+          <h3 class="m-0 text-title uppercase">{step.title}</h3>
+          <p class="m-0 text-small text-ink-muted">{step.text}</p>
+        </li>
+      ))}
+    </ol>
+  </Section>
+
+  <Section class="pt-0 md:pt-0">
+    <SectionHeading eyebrow="Pentru cine">Locuințe, companii și instituții.</SectionHeading>
+    <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
+      {audiences.map((a) => (
+        <div class="flex flex-col gap-3 border border-line p-6">
+          <h3 class="m-0 text-title uppercase">{a.title}</h3>
+          <p class="m-0 text-small text-ink-muted">{a.text}</p>
+        </div>
+      ))}
+    </div>
+  </Section>
+
   {projects.length > 0 && (
-    <Section>
-      <SectionHeading eyebrow="Proiecte">Proiecte recente</SectionHeading>
+    <Section class="pt-0 md:pt-0">
+      <div class="flex flex-wrap items-end justify-between gap-6">
+        <SectionHeading eyebrow="Proiecte">Proiecte recente.</SectionHeading>
+        <Button href="/proiecte" variant="ghost">Toate proiectele</Button>
+      </div>
       <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-        {projects.slice(0, 3).map((p) => (
-          <ServiceCard title={p.data.title} description={`${p.data.location} · ${p.data.year}`}>
-            <ImagePlaceholder slot="media" />
-          </ServiceCard>
-        ))}
+        {projects.map((project) => <ProjectCard project={project} />)}
       </div>
     </Section>
   )}
 
-  <div data-theme="light" class="bg-surface text-ink">
-    <Section>
-      <SectionHeading eyebrow="Previzualizare">Componente formular</SectionHeading>
-      <form class="mt-8 grid max-w-2xl gap-6" onsubmit="return false">
-        <TextField id="demo-nume" label="Nume" required />
-        <TextField id="demo-telefon" label="Telefon" type="tel" error="Introduceți un număr de telefon valid." />
-        <SelectField id="demo-serviciu" label="Serviciu dorit" placeholder="Alegeți un serviciu"
-          options={serviceOptions} value="cctv" />
-        <TextField id="demo-mesaj" label="Mesaj" multiline hint="Spuneți-ne ce doriți să protejați." />
-        <CheckboxField id="demo-gdpr" required>
-          Sunt de acord cu <a href="/politica-de-confidentialitate">politica de confidențialitate</a>.
-        </CheckboxField>
-        <div class="flex flex-wrap items-center gap-6">
-          <Button type="submit">Trimite</Button>
-          <Button variant="secondary">Anulează</Button>
-          <Button variant="ghost" href="/solutii">Detalii CCTV</Button>
-        </div>
-      </form>
-    </Section>
-  </div>
+  <CtaBand />
 </BaseLayout>
