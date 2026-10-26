@@ -1,13 +1,13 @@
 ---
-// Close crop of the panther (eyes, upper face) in a chamfered frame: stand-in for the
-// hero photograph described in design doc §6 until one is supplied.
+// The whole panther, fitted inside a chamfered frame: stand-in for the hero photograph
+// described in design doc §6 until one is supplied.
 import { Image } from "astro:assets";
 import panther from "../../assets/brand/logos/onyx-icon-on-dark.png";
 
 interface Props { class?: string }
 const { class: cls } = Astro.props;
 ---
-<div class:list={["chamfer-lg relative aspect-[4/3] overflow-hidden bg-surface-alt", cls]} aria-hidden="true">
+<div class:list={["chamfer-lg flex aspect-[4/3] items-center justify-center bg-surface p-6 md:p-10", cls]} aria-hidden="true">
   <Image src={panther} alt="" widths={[640, 1058]} sizes="(min-width: 768px) 50vw, 100vw" loading="eager"
-    class="absolute inset-0 size-full origin-[50%_52%] scale-[1.9] object-contain" />
+    class="size-full object-contain" />
 </div>
