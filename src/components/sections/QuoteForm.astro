@@ -73,8 +73,8 @@ const phonePattern = String.raw`(\+40|0040|0)\s?[237]\d{2}([\s.\-]?\d{3}){2}`;
 
   const messageFor = (control: Control) => {
     const byState = messages[control.name] ?? {};
-    for (const state of Object.keys(byState) as (keyof ValidityState)[]) {
-      if (control.validity[state]) return byState[state];
+    for (const [state, message] of Object.entries(byState) as [keyof ValidityState, string][]) {
+      if (control.validity[state]) return message;
     }
     return "Verificați acest câmp.";
   };

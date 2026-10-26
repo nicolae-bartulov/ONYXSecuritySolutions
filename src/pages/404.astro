@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/ui/Section.astro";
+import SectionHeading from "../components/ui/SectionHeading.astro";
+import Button from "../components/ui/Button.astro";
+import Logo from "../components/ui/Logo.astro";
+import { cta } from "../data/site";
+---
+<BaseLayout title="Pagina nu a fost găsită" description="Pagina căutată nu există sau a fost mutată.">
+  <Section>
+    <div class="flex flex-col items-center gap-8 text-center">
+      <Logo variant="portrait" height={160} />
+      <SectionHeading as="h1" align="center" eyebrow="Eroare 404"
+        lead="Pagina căutată nu există sau a fost mutată. Verificați adresa sau continuați de pe pagina principală.">
+        Pagina nu a fost găsită.
+      </SectionHeading>
+      <div class="flex flex-wrap justify-center gap-4">
+        <Button href="/" variant="secondary">Pagina principală</Button>
+        <Button href={cta.primary.href}>{cta.primary.label}</Button>
+      </div>
+    </div>
+  </Section>
+</BaseLayout>

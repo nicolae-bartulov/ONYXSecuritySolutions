@@ -1,0 +1,78 @@
+---
+// TODO(content): first draft for legal review before launch.
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/ui/Section.astro";
+import SectionHeading from "../components/ui/SectionHeading.astro";
+import { site } from "../data/site";
+
+const { legal, contact } = site;
+const updated = "26 octombrie 2026"; // TODO(content): date of the reviewed version
+---
+<BaseLayout title="Politica de confidențialitate" theme="light"
+  description="Cum prelucrează Onyx Security Solutions datele personale trimise prin formularul de ofertă.">
+  <Section>
+    <SectionHeading as="h1" eyebrow="Informații legale" lead={`Ultima actualizare: ${updated}.`}>
+      Politica de confidențialitate
+    </SectionHeading>
+
+    <div class="mt-12 flex max-w-[65ch] flex-col gap-4 text-ink
+      [&_h2]:m-0 [&_h2]:mt-8 [&_h2]:text-title [&_h2]:uppercase
+      [&_p]:m-0 [&_ul]:m-0 [&_ul]:flex [&_ul]:flex-col [&_ul]:gap-2 [&_ul]:pl-6 [&_ul]:list-[square]
+      [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-accent-ink">
+      <p>
+        Această politică explică ce date personale colectăm prin site, de ce le folosim și ce drepturi aveți,
+        conform Regulamentului (UE) 2016/679 (GDPR).
+      </p>
+
+      <h2>Cine suntem</h2>
+      <p>
+        Operatorul datelor este {legal.companyName}, CUI {legal.cui}, Reg. Com. {legal.regCom},
+        cu sediul în {contact.address}. Ne puteți scrie la <a href={`mailto:${contact.email}`}>{contact.email}</a>
+        sau ne puteți suna la <a href={contact.phoneHref}>{contact.phone}</a>.
+      </p>
+
+      <h2>Ce date colectăm</h2>
+      <p>Prin formularul de cerere de ofertă colectăm:</p>
+      <ul>
+        <li>numele și numărul de telefon;</li>
+        <li>adresa de email și localitatea, dacă le completați;</li>
+        <li>serviciul dorit și mesajul pe care ni-l trimiteți.</li>
+      </ul>
+      <p>Site-ul nu folosește cookie-uri de marketing sau de analiză.</p>
+
+      <h2>De ce le folosim</h2>
+      <p>
+        Folosim datele doar pentru a vă contacta în legătură cu cererea dumneavoastră și pentru a vă pregăti o ofertă.
+        Temeiul legal este consimțământul dumneavoastră și demersurile făcute la cererea dumneavoastră înainte de
+        încheierea unui contract.
+      </p>
+
+      <h2>Cât timp le păstrăm</h2>
+      <p>
+        Păstrăm datele cel mult [12 luni] de la ultima comunicare, dacă nu devenim parteneri contractuali.
+        Dacă încheiem un contract, datele se păstrează pe durata impusă de legislația financiar-contabilă.
+      </p>
+
+      <h2>Cui le transmitem</h2>
+      <p>
+        Nu vindem și nu închiriem datele. Ele pot fi prelucrate de furnizorii care ne asigură găzduirea site-ului și
+        transmiterea formularului [denumire furnizor], doar în scopurile de mai sus.
+      </p>
+
+      <h2>Drepturile dumneavoastră</h2>
+      <p>Aveți dreptul:</p>
+      <ul>
+        <li>să aflați ce date avem despre dumneavoastră și să primiți o copie;</li>
+        <li>să cereți corectarea sau ștergerea lor;</li>
+        <li>să restricționați prelucrarea sau să vă opuneți acesteia;</li>
+        <li>să vă retrageți oricând consimțământul;</li>
+        <li>să vă portați datele către alt operator.</li>
+      </ul>
+      <p>
+        Pentru oricare dintre acestea, scrieți-ne la <a href={`mailto:${contact.email}`}>{contact.email}</a>.
+        Puteți depune și o plângere la Autoritatea Națională de Supraveghere a Prelucrării Datelor cu Caracter Personal
+        (ANSPDCP), <a href="https://www.dataprotection.ro" rel="noopener">www.dataprotection.ro</a>.
+      </p>
+    </div>
+  </Section>
+</BaseLayout>
