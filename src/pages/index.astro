@@ -7,11 +7,30 @@ import ServiceCard from "../components/ui/ServiceCard.astro";
 import HeroPanther from "../components/sections/HeroPanther.astro";
 import ProjectCard from "../components/sections/ProjectCard.astro";
 import CtaBand from "../components/sections/CtaBand.astro";
-import { cta } from "../data/site";
+import landscapeLogo from "../assets/brand/logos/onyx-landscape-on-dark.png";
+import { cta, site } from "../data/site";
 import { services } from "../data/services";
 import { getProjects } from "../data/projects";
 
 const projects = (await getProjects()).slice(0, 3);
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: site.name,
+  legalName: site.legal.companyName,
+  description: site.description,
+  slogan: site.tagline,
+  url: new URL("/", Astro.site).href,
+  logo: new URL(landscapeLogo.src, Astro.site).href,
+  image: new URL("/og-default.png", Astro.site).href,
+  telephone: site.contact.phoneHref.replace("tel:", ""),
+  email: site.contact.email,
+  address: { "@type": "PostalAddress", streetAddress: site.contact.address, addressCountry: "RO" },
+  areaServed: site.contact.serviceArea,
+  openingHours: site.contact.openingHours,
+  knowsAbout: services.map((s) => s.name),
+};
 
 const steps = [
   { title: "Consultanță", text: "Discutăm nevoile dumneavoastră și evaluăm riscurile la fața locului." },
@@ -26,7 +45,7 @@ const audiences = [
   { title: "Instituții", text: "Școli, clădiri publice și sedii, cu sisteme proiectate conform legislației." },
 ];
 ---
-<BaseLayout>
+<BaseLayout jsonLd={jsonLd}>
   <Section>
     <div class="grid items-center gap-12 md:grid-cols-2">
       <div class="flex flex-col gap-8">
