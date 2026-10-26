@@ -4,6 +4,7 @@
 // Each row links to its section on /solutii, so the list works without JS too.
 // Below lg the list gives way to one service at a time under the image, with previous/next arrows
 // and a progress ring next to the title.
+import { Image } from "astro:assets";
 import SectionHeading from "../ui/SectionHeading.astro";
 import Button from "../ui/Button.astro";
 import { services } from "../../data/services";
@@ -15,18 +16,6 @@ interface Props {
   interval?: number;
 }
 const { interval = 5000 } = Astro.props;
-
-// TODO(content): replace with one photo per service (design doc §6: low-key, dark hardware, warm light).
-const photoHints: Record<string, string> = {
-  cctv: "Cameră IP pe fațadă, la amurg",
-  antifractie: "Tastatură de alarmă, lumină caldă",
-  interfonie: "Videointerfon la intrare",
-  "control-acces": "Cititor de cartele pe perete întunecat",
-  "automatizari-porti": "Poartă culisantă, casă modernă la amurg",
-  "service-mentenanta": "Tehnician la un rack de echipamente",
-  consultanta: "Discuție pe un plan, lumină caldă",
-  proiectare: "Plan tehnic cu amplasarea camerelor",
-};
 
 const total = String(services.length).padStart(2, "0");
 const arrow = "inline-flex size-12 cursor-pointer items-center justify-center rounded-sm border border-line-strong text-ink transition-colors duration-150 hover:border-accent hover:text-accent-ink";
@@ -40,10 +29,15 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
   <div data-services-showcase data-playing style={`--svc-interval:${interval}ms`}
     class="grid gap-6 md:gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
     <div class="chamfer-lg relative aspect-[4/3] bg-surface-alt md:aspect-video lg:aspect-auto" aria-hidden="true">
-      {services.map(({ slug }, i) => (
+      {services.map(({ image }, i) => (
         <div data-pane data-active={i === 0 ? "" : undefined}
           class="absolute inset-0 flex items-center justify-center p-6 opacity-0 transition-opacity duration-300 data-active:opacity-100 md:p-8">
-          <span class="text-center text-eyebrow uppercase text-ink">{photoHints[slug]}</span>
+          {image ? (
+            <Image src={image} alt="" widths={[640, 960, 1280]} sizes="(min-width: 1024px) 58vw, 100vw"
+              class="absolute inset-0 size-full object-cover" />
+          ) : (
+            <span class="text-center text-eyebrow uppercase text-ink">Fotografie în curând</span>
+          )}
         </div>
       ))}
     </div>

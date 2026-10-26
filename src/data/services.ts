@@ -8,6 +8,13 @@ import IconAutomatizari from "../components/icons/IconAutomatizari.astro";
 import IconService from "../components/icons/IconService.astro";
 import IconConsultanta from "../components/icons/IconConsultanta.astro";
 import IconProiectare from "../components/icons/IconProiectare.astro";
+import imgCctv from "../assets/services/cctv_homepage_image.png";
+import imgAntifractie from "../assets/services/antiefractie_homepage_image.png";
+import imgInterfonie from "../assets/services/interfonie_homepage_image.png";
+import imgControlAcces from "../assets/services/control_access_homepage_image.png";
+import imgAutomatizari from "../assets/services/automatizare_porti_homepage_image.png";
+import imgService from "../assets/services/service_mententanta_homepage_image.png";
+import imgConsultanta from "../assets/services/consultanta_homepage_image.png";
 import type { ServiceSlug } from "./service-slugs";
 
 export interface Service {
@@ -19,6 +26,9 @@ export interface Service {
   summary: string;
   details: string[];
   Icon: typeof IconCctv;
+  /** Photo for the homepage showcase and /solutii; services without one show a placeholder. */
+  image?: ImageMetadata;
+  imageAlt?: string;
 }
 
 export const services: Service[] = [
@@ -35,6 +45,8 @@ export const services: Service[] = [
       "Detecție inteligentă a mișcării și a persoanelor",
     ],
     Icon: IconCctv,
+    image: imgCctv,
+    imageAlt: "Cameră de supraveghere montată pe fațada unei case, la amurg",
   },
   {
     slug: "antifractie",
@@ -49,6 +61,8 @@ export const services: Service[] = [
       "Conectare la dispecerat de monitorizare",
     ],
     Icon: IconAntifractie,
+    image: imgAntifractie,
+    imageAlt: "Tastatură de alarmă iluminată pe peretele unei locuințe",
   },
   {
     slug: "interfonie",
@@ -63,6 +77,8 @@ export const services: Service[] = [
       "Integrare cu control acces",
     ],
     Icon: IconInterfonie,
+    image: imgInterfonie,
+    imageAlt: "Videointerfon cu ecran montat lângă ușa de la intrare",
   },
   {
     slug: "control-acces",
@@ -77,6 +93,8 @@ export const services: Service[] = [
       "Pontaj pentru angajați",
     ],
     Icon: IconControlAcces,
+    image: imgControlAcces,
+    imageAlt: "Cititor de cartele montat lângă intrarea unei clădiri de birouri",
   },
   {
     slug: "automatizari-porti",
@@ -91,6 +109,8 @@ export const services: Service[] = [
       "Fotocelule și dispozitive de siguranță",
     ],
     Icon: IconAutomatizari,
+    image: imgAutomatizari,
+    imageAlt: "Poartă culisantă automată în fața unei case moderne, la amurg",
   },
   {
     slug: "service-mentenanta",
@@ -105,6 +125,8 @@ export const services: Service[] = [
       "Preluarea în service a sistemelor existente",
     ],
     Icon: IconService,
+    image: imgService,
+    imageAlt: "Tehnician care lucrează la un rack de echipamente",
   },
   {
     slug: "consultanta",
@@ -119,6 +141,8 @@ export const services: Service[] = [
       "Estimare de buget",
     ],
     Icon: IconConsultanta,
+    image: imgConsultanta,
+    imageAlt: "Plan de locuință văzut de sus, cu doi oameni în discuție",
   },
   {
     slug: "proiectare",
@@ -133,6 +157,7 @@ export const services: Service[] = [
       "Coordonarea execuției",
     ],
     Icon: IconProiectare,
+    // TODO(content): photo
   },
 ];
 

@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/ui/Section.astro";
 import SectionHeading from "../components/ui/SectionHeading.astro";
@@ -33,7 +34,7 @@ import { url } from "../lib/url";
       </nav>
 
       <div class="flex flex-col gap-12 md:gap-24">
-        {services.map(({ slug, name, line, summary, details, Icon }) => (
+        {services.map(({ slug, name, line, summary, details, Icon, image, imageAlt }) => (
           <article id={slug} class="grid scroll-mt-28 gap-8 border-t border-line pt-12 md:grid-cols-2 md:gap-12">
             <div class="flex flex-col items-start gap-4">
               <span class="inline-flex size-8 text-accent light:text-ink [&>svg]:size-full" aria-hidden="true">
@@ -55,7 +56,12 @@ import { url } from "../lib/url";
                 Solicită ofertă<span class="sr-only"> pentru {name}</span>
               </Button>
             </div>
-            <ImagePlaceholder chamfer="tr" class="md:self-start" />
+            {image ? (
+              <Image src={image} alt={imageAlt ?? name} widths={[640, 960]} sizes="(min-width: 768px) 40vw, 100vw"
+                class="chamfer-tr aspect-[4/3] w-full object-cover md:self-start" />
+            ) : (
+              <ImagePlaceholder chamfer="tr" class="md:self-start" />
+            )}
           </article>
         ))}
       </div>
