@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Section from "../components/ui/Section.astro";
+import SectionHeading from "../components/ui/SectionHeading.astro";
+import QuoteForm from "../components/sections/QuoteForm.astro";
+import { site } from "../data/site";
+
+const { contact } = site;
+const details = [
+  { label: "Telefon", value: contact.phone, href: contact.phoneHref },
+  { label: "Email", value: contact.email, href: `mailto:${contact.email}` },
+  { label: "Adresă", value: contact.address },
+  { label: "Program", value: contact.hours },
+  { label: "Zona deservită", value: contact.serviceArea },
+];
+const link = "text-ink underline underline-offset-4 decoration-line-strong transition-colors duration-150 hover:text-accent-ink hover:decoration-accent";
+---
+<BaseLayout title="Contact" theme="light"
+  description="Solicitați o ofertă pentru un sistem de securitate. Spuneți-ne ce doriți să protejați și vă contactăm pentru detalii.">
+  <Section>
+    <div class="grid gap-12 lg:grid-cols-[1fr_1.4fr] lg:gap-24">
+      <div class="flex flex-col gap-12">
+        <SectionHeading as="h1" size="display" eyebrow="Contact"
+          lead="Spuneți-ne ce doriți să protejați. Vă contactăm pentru detalii și, dacă este nevoie, venim la fața locului.">
+          Solicitați o ofertă.
+        </SectionHeading>
+        <dl class="m-0 grid gap-6">
+          {details.map((d) => (
+            <div class="flex flex-col gap-1 border-t border-line pt-4">
+              <dt class="text-eyebrow uppercase text-ink-muted">{d.label}</dt>
+              <dd class="m-0 text-body-lg text-ink">
+                {d.href ? <a href={d.href} class={link}>{d.value}</a> : d.value}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+
+      <div class="flex flex-col gap-8">
+        <h2 class="m-0 text-title uppercase">Cerere de ofertă</h2>
+        <QuoteForm />
+      </div>
+    </div>
+  </Section>
+</BaseLayout>

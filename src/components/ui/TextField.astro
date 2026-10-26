@@ -7,13 +7,15 @@ interface Props {
   name?: string;
   placeholder?: string;
   required?: boolean;
+  pattern?: string;
+  autocomplete?: HTMLAttributes<"input">["autocomplete"];
   hint?: string;
   error?: string;
   multiline?: boolean;
   rows?: number;
   class?: string;
 }
-const { id, label, type = "text", name = id, placeholder, required, hint, error, multiline, rows = 4, class: cls } = Astro.props;
+const { id, label, type = "text", name = id, placeholder, required, pattern, autocomplete, hint, error, multiline, rows = 4, class: cls } = Astro.props;
 const hintId = hint || error ? `${id}-hint` : undefined;
 const control = [
   "font-sans text-body text-ink bg-surface rounded-none px-4 py-3",
@@ -21,12 +23,13 @@ const control = [
   error ? "border-2 border-ink" : "border border-line-strong",
 ];
 ---
-<div class:list={["flex flex-col gap-2 min-w-0", cls]}>
+<div data-field class:list={["flex flex-col gap-2 min-w-0", cls]}>
   <label for={id} class="text-eyebrow uppercase text-ink-muted">{label}</label>
   {multiline
-    ? <textarea id={id} name={name} rows={rows} placeholder={placeholder} required={required}
+    ? <textarea id={id} name={name} rows={rows} placeholder={placeholder} required={required} autocomplete={autocomplete}
         aria-describedby={hintId} aria-invalid={error ? "true" : undefined} class:list={[control, "resize-y"]} />
     : <input id={id} name={name} type={type} placeholder={placeholder} required={required}
+        pattern={pattern} autocomplete={autocomplete}
         aria-describedby={hintId} aria-invalid={error ? "true" : undefined} class:list={control} />}
   {error
     ? <p id={hintId} class="m-0 text-small font-semibold text-ink"><span aria-hidden="true">! </span>{error}</p>

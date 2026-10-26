@@ -1,0 +1,29 @@
+---
+// Short centered closing section that leads to the quote form.
+import Section from "../ui/Section.astro";
+import SectionHeading from "../ui/SectionHeading.astro";
+import Button from "../ui/Button.astro";
+import { cta } from "../../data/site";
+
+interface Props {
+  heading?: string;
+  lead?: string;
+  eyebrow?: string;
+  href?: string;
+  label?: string;
+}
+const {
+  heading = "Spuneți-ne ce doriți să protejați.",
+  lead = "Venim la fața locului, evaluăm riscurile și vă propunem soluția potrivită.",
+  eyebrow = "Ofertă",
+  href = cta.primary.href,
+  label = cta.primary.label,
+} = Astro.props;
+---
+<Section band>
+  <div class="flex flex-col items-center gap-8">
+    <SectionHeading align="center" eyebrow={eyebrow}>{heading}</SectionHeading>
+    {lead && <p class="m-0 max-w-[38rem] text-center text-body-lg text-ink">{lead}</p>}
+    <Button href={href} size="lg">{label}</Button>
+  </div>
+</Section>

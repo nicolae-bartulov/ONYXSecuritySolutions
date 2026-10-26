@@ -16,7 +16,7 @@ interface Props {
 const { id, label, options, name = id, placeholder, value, required, hint, error, class: cls } = Astro.props;
 const hintId = hint || error ? `${id}-hint` : undefined;
 ---
-<div class:list={["flex flex-col gap-2 min-w-0", cls]}>
+<div data-field class:list={["flex flex-col gap-2 min-w-0", cls]}>
   <label for={id} class="text-eyebrow uppercase text-ink-muted">{label}</label>
   <div class="relative">
     <select id={id} name={name} required={required}
