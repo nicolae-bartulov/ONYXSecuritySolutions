@@ -7,6 +7,7 @@ import CheckboxField from "../ui/CheckboxField.astro";
 import Button from "../ui/Button.astro";
 import { site } from "../../data/site";
 import { serviceOptions } from "../../data/services";
+import { url } from "../../lib/url";
 
 interface Props { id?: string; class?: string }
 const { id = "oferta", class: cls } = Astro.props;
@@ -40,7 +41,7 @@ const phonePattern = String.raw`(\+40|0040|0)\s?[237]\d{2}([\s.\-]?\d{3}){2}`;
 
     <CheckboxField id="acord" required class="sm:col-span-2">
       Sunt de acord ca datele mele să fie folosite pentru a primi o ofertă, conform
-      <a href="/politica-de-confidentialitate">politicii de confidențialitate</a>.
+      <a href={url("/politica-de-confidentialitate")}>politicii de confidențialitate</a>.
     </CheckboxField>
 
     <div class="flex flex-col items-start gap-4 sm:col-span-2">

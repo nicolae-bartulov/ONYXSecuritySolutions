@@ -1,5 +1,6 @@
 // Company details, navigation and CTAs shared by the layout and pages.
 // Every value marked TODO(content) is a placeholder: `grep -rn "TODO(content)" src/` lists them.
+import { url } from "../lib/url";
 
 export const site = {
   name: "Onyx Security Solutions",
@@ -34,15 +35,15 @@ export const site = {
 };
 
 export const navLinks = [
-  { label: "Soluții", href: "/solutii" },
-  { label: "Proiecte", href: "/proiecte" },
-  { label: "Despre noi", href: "/despre-noi" },
-  { label: "Contact", href: "/contact" },
+  { label: "Soluții", href: url("/solutii") },
+  { label: "Proiecte", href: url("/proiecte") },
+  { label: "Despre noi", href: url("/despre-noi") },
+  { label: "Contact", href: url("/contact") },
 ];
 
 export const cta = {
-  primary: { label: "Solicită ofertă", href: "/contact#oferta" },
-  secondary: { label: "Vezi soluțiile", href: "/solutii" },
+  primary: { label: "Solicită ofertă", href: url("/contact#oferta") },
+  secondary: { label: "Vezi soluțiile", href: url("/solutii") },
 };
 
 /** True when `path` is `href` or one of its sub-pages. */

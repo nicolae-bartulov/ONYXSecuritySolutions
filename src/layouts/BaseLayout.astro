@@ -4,6 +4,7 @@ import "../styles/global.css";
 import NavBar from "../components/layout/NavBar.astro";
 import Footer from "../components/layout/Footer.astro";
 import { site } from "../data/site";
+import { url } from "../lib/url";
 
 interface Props {
   /** Page name; omitted on the home page. */
@@ -19,7 +20,7 @@ interface Props {
 const { title, description = site.description, theme, image = "/og-default.png", jsonLd } = Astro.props;
 const fullTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
-const ogImage = new URL(image, Astro.site);
+const ogImage = new URL(url(image), Astro.site);
 // "<" escaped so the data can never close the script tag.
 const structuredData = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c");
 ---
@@ -31,10 +32,10 @@ const structuredData = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c")
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content={theme === "light" ? "#ffffff" : "#0f0f0f"} />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" href="/favicon.png" type="image/png" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="icon" href={url("/favicon.ico")} sizes="any" />
+    <link rel="icon" href={url("/favicon.png")} type="image/png" />
+    <link rel="apple-touch-icon" href={url("/apple-touch-icon.png")} />
+    <link rel="sitemap" href={url("/sitemap-index.xml")} />
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="ro_RO" />
