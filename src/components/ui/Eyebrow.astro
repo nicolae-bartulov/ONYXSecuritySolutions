@@ -1,0 +1,10 @@
+---
+interface Props { rule?: "none" | "leading" | "both"; class?: string }
+const { rule = "none", class: cls } = Astro.props;
+const bar = "inline-block w-8 h-0.5 bg-accent";
+---
+<span class:list={["inline-flex items-center gap-3 text-eyebrow uppercase text-accent-ink", cls]}>
+  {(rule === "leading" || rule === "both") && <span class={bar} aria-hidden="true" />}
+  <span><slot /></span>
+  {rule === "both" && <span class={bar} aria-hidden="true" />}
+</span>

@@ -1,0 +1,40 @@
+---
+// Same label, border and error treatment as TextField.
+interface Props {
+  id: string;
+  label: string;
+  options: { value: string; label: string }[];
+  name?: string;
+  /** Empty first option, e.g. "Alegeți un serviciu". */
+  placeholder?: string;
+  value?: string;
+  required?: boolean;
+  hint?: string;
+  error?: string;
+  class?: string;
+}
+const { id, label, options, name = id, placeholder, value, required, hint, error, class: cls } = Astro.props;
+const hintId = hint || error ? `${id}-hint` : undefined;
+---
+<div class:list={["flex flex-col gap-2 min-w-0", cls]}>
+  <label for={id} class="text-eyebrow uppercase text-ink-muted">{label}</label>
+  <div class="relative">
+    <select id={id} name={name} required={required}
+      aria-describedby={hintId} aria-invalid={error ? "true" : undefined}
+      class:list={[
+        "w-full appearance-none font-sans text-body text-ink bg-surface rounded-none py-3 pl-4 pr-12 cursor-pointer",
+        "focus:outline-2 focus:outline-focus focus:outline-offset-0",
+        error ? "border-2 border-ink" : "border border-line-strong",
+      ]}>
+      {placeholder && <option value="" selected={!value}>{placeholder}</option>}
+      {options.map((o) => <option value={o.value} selected={o.value === value}>{o.label}</option>)}
+    </select>
+    <svg class="pointer-events-none absolute right-4 top-1/2 size-4 -translate-y-1/2 text-ink" viewBox="0 0 16 16"
+      fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true">
+      <path d="M3 6l5 5 5-5" />
+    </svg>
+  </div>
+  {error
+    ? <p id={hintId} class="m-0 text-small font-semibold text-ink"><span aria-hidden="true">! </span>{error}</p>
+    : hint && <p id={hintId} class="m-0 text-small text-ink-muted">{hint}</p>}
+</div>

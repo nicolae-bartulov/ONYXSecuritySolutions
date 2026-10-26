@@ -1,0 +1,34 @@
+---
+import { Image } from "astro:assets";
+import landscapeDark from "../../assets/brand/logos/onyx-landscape-on-dark.png";
+import landscapeLight from "../../assets/brand/logos/onyx-landscape-on-light.png";
+import portraitDark from "../../assets/brand/logos/onyx-portrait-on-dark.png";
+import portraitLight from "../../assets/brand/logos/onyx-portrait-on-light.png";
+import iconDark from "../../assets/brand/logos/onyx-icon-on-dark.png";
+import iconLight from "../../assets/brand/logos/onyx-icon-on-light.png";
+
+interface Props {
+  variant?: "landscape" | "portrait" | "icon";
+  /** Force one artwork regardless of theme (e.g. over a photo). */
+  ground?: "dark" | "light";
+  height?: number;
+  class?: string;
+}
+const { variant = "landscape", ground, height = 40, class: cls } = Astro.props;
+const art = {
+  landscape: { dark: landscapeDark, light: landscapeLight },
+  portrait: { dark: portraitDark, light: portraitLight },
+  icon: { dark: iconDark, light: iconLight },
+}[variant];
+const alt = "Onyx Security Solutions";
+---
+<span class:list={["inline-flex items-center", cls]}>
+  {ground !== "light" && (
+    <Image src={art.dark} alt={alt} height={height}
+      class:list={["block w-auto", !ground && "light:hidden"]} style={`height:${height}px`} />
+  )}
+  {ground !== "dark" && (
+    <Image src={art.light} alt={ground ? alt : ""} aria-hidden={ground ? undefined : "true"} height={height}
+      class:list={["w-auto", ground ? "block" : "hidden light:block"]} style={`height:${height}px`} />
+  )}
+</span>

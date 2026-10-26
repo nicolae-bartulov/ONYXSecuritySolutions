@@ -1,0 +1,29 @@
+---
+interface Props {
+  variant?: "primary" | "secondary" | "ghost";
+  size?: "sm" | "md" | "lg";
+  href?: string;
+  type?: "button" | "submit";
+  disabled?: boolean;
+  class?: string;
+}
+const { variant = "primary", size = "md", href, type = "button", disabled, class: cls } = Astro.props;
+const Tag = href ? "a" : "button";
+const sizes = { sm: "px-4 py-2.5", md: "px-6 py-3", lg: "px-8 py-4" };
+const variants = {
+  primary: `${sizes[size]} bg-accent text-on-accent chamfer-sm hover:bg-ink hover:text-surface focus-visible:[clip-path:none]`,
+  secondary: `${sizes[size]} rounded-sm border border-line-strong text-ink hover:border-accent`,
+  ghost: "py-3 border-b-2 border-accent text-accent-ink hover:text-ink",
+};
+---
+<Tag
+  href={href}
+  type={href ? undefined : type}
+  disabled={href ? undefined : disabled}
+  class:list={[
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap text-button uppercase no-underline",
+    "transition-colors duration-150 cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed",
+    variants[variant],
+    cls,
+  ]}
+><slot /></Tag>
