@@ -12,8 +12,8 @@ A fully static site (no SSR adapter). All pages exist; most company details and 
 
 ## Structure
 
-- `src/layouts/BaseLayout.astro` — `<html lang="ro">`, font + `global.css`, meta/Open Graph (default image `public/og-default.png`), optional `jsonLd` prop, skip link, NavBar, `<main id="continut">`, Footer. Props: `title`, `description`, `theme` (`"light"` or omitted for dark), `image`, `jsonLd`.
-- `src/components/ui/` — design-system components from the doc (`Logo`, `Button`, `Eyebrow`, `SectionHeading`, `ServiceCard`, `TextField`) plus `Section` (standard padding/gutters), `ImagePlaceholder`, `SelectField`, `CheckboxField`.
+- `src/layouts/BaseLayout.astro` — `<html lang="ro">`, font + `global.css`, meta/Open Graph (default image `public/og-default.png`), optional `jsonLd` prop, skip link, NavBar, `<main id="continut">`, Footer, ThemeToggle, and an inline `<head>` script that applies the saved theme before first paint. Props: `title`, `description`, `theme` (`"light"` or omitted for dark; the default until the visitor picks a theme), `image`, `jsonLd`.
+- `src/components/ui/` — design-system components from the doc (`Logo`, `Button`, `Eyebrow`, `SectionHeading`, `ServiceCard`, `TextField`) plus `Section` (standard padding/gutters), `ImagePlaceholder`, `SelectField`, `CheckboxField`, and `ThemeToggle` (the yarn-ball dark/light switch fixed bottom-right; paw cursor in `public/paw-cursor.svg`).
 - `src/components/layout/` — `NavBar` (two links from `navLinks` plus the "Solicită ofertă" CTA, which is the way to `/contact`; desktop links from `lg`, menu button below), `Footer` (adds Acasă and Contact around `navLinks`).
 - `src/components/sections/` — page sections: `CtaBand`, `HeroPanther`, `ServicesShowcase`, `QuoteForm`.
 - `src/components/icons/` — eight line icons, one per service, redrawn from the brand moodboard's iconography.
@@ -39,12 +39,12 @@ The dev server sometimes keeps serving stale Tailwind CSS after new `.astro` fil
 
 Key mechanics spread across `global.css` and the doc:
 
-- **Theming is attribute-based, not OS-based.** Dark is the default (`:root`); light is opt-in with `data-theme="light"` on `<html>` or any wrapper. Custom variants `light:` and `dark:` follow that attribute, not `prefers-color-scheme`.
+- **Theming is attribute-based, not OS-based.** Dark is the default (`:root`); light is opt-in with `data-theme="light"` on `<html>` or any wrapper. Custom variants `light:` and `dark:` follow that attribute, not `prefers-color-scheme`. `ThemeToggle` sets or removes it on `<html>` and saves the choice in `localStorage` (`theme` = `light`/`dark`), which then overrides a page's `theme` prop on every page.
 - **Use semantic color utilities** (`bg-surface`, `bg-surface-alt`, `text-ink`, `text-ink-muted`, `border-line`, `border-line-strong`, `bg-accent`, `text-on-accent`, `text-accent-ink`). They are CSS variables that swap per theme, so `dark:`/`light:` prefixes are rarely needed. `brand-*` colors are fixed and should be avoided in components.
 - **Contrast rules:** never gold or silver text on light backgrounds (use `text-accent-ink` / `text-ink-muted`); text on gold is always `text-on-accent`. No red/green in the palette — errors use a 2px `border-ink` and a "!" marker.
 - **Type scale** is custom (`text-display`, `text-headline`, `text-title`, `text-eyebrow`, `text-body-lg`, `text-body`, `text-small`, `text-button`). Display/headline/title/eyebrow/button are always paired with `uppercase`; write the source text in sentence case.
 - **Shape:** square brand — `rounded-none` everywhere except `rounded-sm` (2px) on buttons/badges. Brand utilities `chamfer-sm`, `chamfer-tr`, `chamfer-lg` (cut corners) and `rule-gold` (40×2px accent rule) are defined in `global.css`. No shadows or gradients.
-- **Deliberate deviations from the doc:** `Section` pads 48px top and bottom at every width (the doc says 96px on desktop), and the primary `Button` stays gold on hover and animates its cut corners to square (400ms) instead of inverting to ink.
+- **Deliberate deviations from the doc:** `Section` pads 48px top and bottom at every width (the doc says 96px on desktop), and the primary `Button` stays gold on hover and animates its cut corners to square (400ms) instead of inverting to ink. `ThemeToggle`'s track is fully rounded, with a gold border in both themes.
 - **Font:** Montserrat via `@fontsource-variable/montserrat`, imported in `BaseLayout` together with `global.css`.
 - **Logos** are PNGs in `src/assets/brand/logos/` named `onyx-{landscape|portrait|icon}-on-{dark|light}.png`, trimmed to the artwork; the `Logo` component picks the variant per theme using `astro:assets` `<Image>`. Below `sm` the header shows the icon variant so the CTA fits.
 - **`bg-surface-alt` as a full-width area is used only for the Footer**: page sections are plain `bg-surface`, separated by spacing. This deliberately narrows the design doc's "alternate bands sparingly". It still fills image placeholders and card media. The Footer sets `--accent-ink` to ink because gold text on graphite fails contrast (~4.2:1); gold fills and rules stay gold.

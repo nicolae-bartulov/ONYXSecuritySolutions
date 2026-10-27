@@ -1,0 +1,97 @@
+---
+// Dark/light theme switch, fixed in the bottom-right corner: a ball of yarn in a gold track. The
+// visible icon (moon or sun) is the active theme; the ball rests over the other one and trails a
+// loose thread behind it. Position, roll and thread all follow data-theme="light" on <html> via
+// the light: variant, so they always match the page. BaseLayout's inline script applies the saved
+// choice before first paint; the script below flips it and saves it.
+import { url } from "../../lib/url";
+
+const cursor = `cursor: url(${url("/paw-cursor.svg")}) 16 16, pointer`;
+---
+<button type="button" role="switch" aria-checked="false" aria-label="Temă luminoasă" data-theme-toggle
+  style={cursor}
+  class="fixed right-4 bottom-4 z-40 rounded-full text-focus md:right-6 md:bottom-6">
+  <span class="relative block h-10 w-19 overflow-hidden rounded-full border-[1.5px] border-accent bg-surface transition-colors duration-400">
+    <svg class="absolute top-3 left-[11px] size-4 text-accent transition-colors duration-400 light:text-brand-silver"
+      viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true">
+      <path d="M13 9.5A5.5 5.5 0 0 1 6.5 3a5.5 5.5 0 1 0 6.5 6.5z" />
+    </svg>
+    <svg class="absolute top-3 right-[11px] size-4 text-line transition-colors duration-400 light:text-ink"
+      viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true">
+      <circle cx="8" cy="8" r="3" />
+      <path d="M8 1v1.5M8 13.5V15M1 8h1.5M13.5 8H15M3 3l1 1M12 12l1 1M3 13l1-1M12 4l1-1" />
+    </svg>
+    <!-- Loose thread along the bottom: trails left in dark, right in light, drawn out from the ball. -->
+    <svg class="absolute inset-0 size-full" viewBox="0 0 73 37" fill="none" aria-hidden="true">
+      <path d="M46 30C38 34 30 31 24 33S15 34 12 31" pathLength="1" stroke-width="1.25" stroke-linecap="round"
+        class="thread stroke-accent [stroke-dashoffset:0] light:stroke-ink light:[stroke-dashoffset:1]" />
+      <path d="M28 30C36 34 44 31 50 33S59 34 62 31" pathLength="1" stroke-width="1.25" stroke-linecap="round"
+        class="thread stroke-accent [stroke-dashoffset:1] light:stroke-ink light:[stroke-dashoffset:0]" />
+    </svg>
+    <!-- 35px of travel turns a 32px ball about 125 degrees, so it rolls rather than slides. -->
+    <svg class="absolute top-0.75 left-0.75 size-8 translate-x-[35px] rotate-[125deg] transition-[translate,rotate] duration-500 ease-in-out light:translate-x-0 light:rotate-0 [&_*]:transition-colors [&_*]:duration-400"
+      viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <defs><clipPath id="yarn-ball-clip"><circle cx="20" cy="20" r="16" /></clipPath></defs>
+      <circle cx="20" cy="20" r="16" class="fill-accent light:fill-ink" />
+      <g clip-path="url(#yarn-ball-clip)" stroke-linecap="round" class="stroke-surface light:stroke-brand-silver">
+        <path d="M24 36c10-4 14-12 12-20s-6-8-6-8 2 10-6 20-12 8-12 8z" stroke="none" fill-opacity="0.18"
+          class="fill-surface light:fill-brand-silver" />
+        <g stroke-width="1" stroke-opacity="0.45">
+          <path d="M14 4c-6 9-6 23 0 32" />
+          <path d="M18 4c-5 10-5 23 1 32" />
+          <path d="M23 4c-4 10-4 22 1 32" />
+          <path d="M28 6c-3 9-3 20 1 28" />
+          <path d="M10 7c-5 8-5 19 0 27" />
+        </g>
+        <g stroke-width="1.25" stroke-opacity="0.7">
+          <path d="M9 10c7 2 16 2 23-2" />
+          <path d="M4 14c9 3 23 3 32-2" />
+          <path d="M4 18c10 4 23 4 32-2" />
+          <path d="M4 22c10 5 23 4 32-1" />
+          <path d="M5 26c9 4 21 4 30-1" />
+          <path d="M7 30c8 3 18 3 26-1" />
+        </g>
+        <g stroke-width="1" stroke-opacity="0.85">
+          <path d="M8 8c10 6 18 14 22 26" />
+          <path d="M12 5c9 6 17 15 20 28" />
+          <path d="M5 12c9 6 17 14 21 24" />
+        </g>
+      </g>
+      <circle cx="20" cy="20" r="16" stroke-width="1" stroke-opacity="0.5" class="stroke-surface light:stroke-brand-silver" />
+    </svg>
+  </span>
+</button>
+
+<style>
+  .thread {
+    stroke-dasharray: 1;
+    transition: stroke-dashoffset 500ms cubic-bezier(0.4, 0, 0.2, 1), stroke 400ms ease;
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const themeColor = document.querySelector('meta[name="theme-color"]');
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]")) {
+    const sync = () => {
+      const light = root.dataset.theme === "light";
+      button.setAttribute("aria-checked", String(light));
+      themeColor?.setAttribute("content", light ? "#ffffff" : "#0f0f0f");
+    };
+
+    button.addEventListener("click", () => {
+      const light = root.dataset.theme !== "light";
+      if (light) root.dataset.theme = "light";
+      else delete root.dataset.theme;
+      try {
+        localStorage.setItem("theme", light ? "light" : "dark");
+      } catch {
+        // Storage blocked (private mode): the switch still works for this page.
+      }
+      sync();
+    });
+
+    sync();
+  }
+</script>
