@@ -6,6 +6,7 @@ import Button from "../components/ui/Button.astro";
 import HeroPanther from "../components/sections/HeroPanther.astro";
 import ServicesShowcase from "../components/sections/ServicesShowcase.astro";
 import ProcessSteps from "../components/sections/ProcessSteps.astro";
+import AudienceCards from "../components/sections/AudienceCards.astro";
 import CtaBand from "../components/sections/CtaBand.astro";
 import landscapeLogo from "../assets/brand/logos/onyx-landscape-on-dark.png";
 import { cta, site } from "../data/site";
@@ -29,12 +30,6 @@ const jsonLd = {
   openingHours: site.contact.openingHours,
   knowsAbout: services.map((s) => s.name),
 };
-
-const audiences = [
-  { title: "Locuințe", text: "Case și apartamente protejate discret, cu control de pe telefon." },
-  { title: "Companii", text: "Birouri, depozite și spații comerciale, cu acces controlat pentru angajați." },
-  { title: "Instituții", text: "Școli, clădiri publice și sedii, cu sisteme proiectate conform legislației." },
-];
 ---
 <BaseLayout jsonLd={jsonLd}>
   <Section>
@@ -61,16 +56,8 @@ const audiences = [
     <ProcessSteps />
   </Section>
 
-  <Section class="pt-0 md:pt-0">
-    <SectionHeading eyebrow="Pentru cine">Locuințe, companii și instituții.</SectionHeading>
-    <div class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-3">
-      {audiences.map((a) => (
-        <div class="flex flex-col gap-3 border border-line p-6">
-          <h3 class="m-0 text-title uppercase">{a.title}</h3>
-          <p class="m-0 text-small text-ink-muted">{a.text}</p>
-        </div>
-      ))}
-    </div>
+  <Section>
+    <AudienceCards />
   </Section>
 
   <CtaBand />
