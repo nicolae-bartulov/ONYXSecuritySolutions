@@ -11,10 +11,10 @@ const { variant = "primary", size = "md", href, type = "button", disabled, class
 const Tag = href ? "a" : "button";
 const sizes = { sm: "px-4 py-2.5", md: "px-6 py-3", lg: "px-8 py-4" };
 const variants = {
-  // Hover squares off the cut corners: the rectangle has the same six points as chamfer-sm so it animates.
-  primary: `${sizes[size]} bg-accent text-on-accent chamfer-sm transition-[clip-path] ease-out hover:[clip-path:polygon(0_0,100%_0,100%_100%,100%_100%,0_100%,0_0)] focus-visible:[clip-path:none]`,
-  secondary: `${sizes[size]} rounded-sm border border-line-strong text-ink transition-colors hover:border-accent`,
-  ghost: "py-3 border-b-2 border-accent text-accent-ink transition-colors hover:text-ink",
+  // Hover squares off the cut corners over 400ms: the rectangle has the same six points as chamfer-sm so it animates.
+  primary: `${sizes[size]} bg-accent text-on-accent chamfer-sm transition-[clip-path] duration-400 ease-in-out hover:[clip-path:polygon(0_0,100%_0,100%_100%,100%_100%,0_100%,0_0)] focus-visible:[clip-path:none]`,
+  secondary: `${sizes[size]} rounded-sm border border-line-strong text-ink transition-colors duration-150 hover:border-accent`,
+  ghost: "py-3 border-b-2 border-accent text-accent-ink transition-colors duration-150 hover:text-ink",
 };
 ---
 <Tag
@@ -23,7 +23,7 @@ const variants = {
   disabled={href ? undefined : disabled}
   class:list={[
     "inline-flex items-center justify-center gap-2 whitespace-nowrap text-button uppercase no-underline",
-    "duration-150 cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed",
+    "cursor-pointer disabled:opacity-45 disabled:cursor-not-allowed",
     variants[variant],
     cls,
   ]}
