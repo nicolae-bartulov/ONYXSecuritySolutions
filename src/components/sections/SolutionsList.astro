@@ -1,20 +1,24 @@
 ---
-// All services on /solutii: a sticky nav on the left (a row of links below lg) and one article per
-// service. While scrolling, the service with the most of itself on screen is highlighted in the
-// nav the same way as hover, and marked aria-current="location".
+// All services on /solutii: a sticky nav and one article per service. From lg the nav is a column
+// on the left; below lg it is a full-width bar that sticks under the site header and scrolls
+// sideways. While scrolling, the service with the most of itself on screen is highlighted in the
+// nav the same way as hover (and marked aria-current="location"); below lg the bar also scrolls to
+// keep that item centred. Clicking a nav item scrolls its section to just below the sticky nav.
 import { Image } from "astro:assets";
 import Button from "../ui/Button.astro";
 import ImagePlaceholder from "../ui/ImagePlaceholder.astro";
 import { services } from "../../data/services";
 import { url } from "../../lib/url";
 ---
-<div data-solutions class="grid gap-12 lg:grid-cols-[14rem_1fr]">
-  <nav aria-label="Soluții pe această pagină" class="lg:sticky lg:top-28 lg:self-start">
-    <ul class="m-0 flex list-none flex-wrap gap-x-6 p-0 lg:flex-col">
+<div data-solutions class="grid grid-cols-1 gap-12 lg:grid-cols-[14rem_1fr]" style="--svc-top:73px">
+  <nav data-solutions-nav aria-label="Soluții pe această pagină"
+    class="sticky top-(--svc-top) z-40 -mx-4 min-w-0 border-y border-line bg-surface md:-mx-12 lg:top-28 lg:z-auto lg:mx-0 lg:self-start lg:border-0 lg:bg-transparent">
+    <ul data-solutions-bar
+      class="m-0 flex list-none gap-6 overflow-x-auto p-0 px-4 [scrollbar-width:none] md:gap-8 md:px-12 lg:flex-col lg:gap-0 lg:overflow-visible lg:px-0 [&::-webkit-scrollbar]:hidden">
       {services.map(({ slug, name }, i) => (
-        <li class="lg:border-t lg:border-line">
+        <li class="shrink-0 lg:border-t lg:border-line">
           <a href={`#${slug}`} data-nav={slug} data-active={i === 0 ? "" : undefined}
-            class="inline-block py-3.5 text-eyebrow uppercase text-ink no-underline transition-colors duration-150 hover:text-accent-ink data-active:text-accent-ink lg:py-3">
+            class="inline-block whitespace-nowrap py-4 text-eyebrow uppercase text-ink no-underline transition-colors duration-150 hover:text-accent-ink data-active:text-accent-ink lg:whitespace-normal lg:py-3">
             {name}
           </a>
         </li>
@@ -24,7 +28,7 @@ import { url } from "../../lib/url";
 
   <div class="flex flex-col gap-12 md:gap-24">
     {services.map(({ slug, name, line, summary, details, Icon, image, imageAlt }) => (
-      <article id={slug} data-solution class="grid scroll-mt-28 gap-8 border-t border-line pt-12 md:grid-cols-2 md:gap-12">
+      <article id={slug} data-solution class="grid scroll-mt-32 gap-8 border-t border-line pt-12 md:grid-cols-2 md:gap-12 lg:scroll-mt-28">
         <div class="flex flex-col items-start gap-4">
           <span class="inline-flex size-8 text-accent light:text-ink [&>svg]:size-full" aria-hidden="true">
             <Icon />
@@ -56,21 +60,37 @@ import { url } from "../../lib/url";
   </div>
 </div>
 
-<style is:global>
-  @media (prefers-reduced-motion: no-preference) {
-    html:has([data-solutions]) { scroll-behavior: smooth; }
-  }
-</style>
-
 <script>
   for (const root of document.querySelectorAll<HTMLElement>("[data-solutions]")) {
+    const nav = root.querySelector<HTMLElement>("[data-solutions-nav]")!;
+    const bar = root.querySelector<HTMLElement>("[data-solutions-bar]")!;
     const links = new Map(
       [...root.querySelectorAll<HTMLElement>("[data-nav]")].map((a) => [a.dataset.nav!, a]),
     );
     const articles = [...root.querySelectorAll<HTMLElement>("[data-solution]")];
     const header = document.querySelector("header");
+    const isBar = matchMedia("(max-width: 1023.98px)");
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)");
     let active = articles[0].id;
     let frame = 0;
+    let locked = false;
+    let unlock = 0;
+
+    // Below lg the bar sticks right under the site header, whose height changes with the menu.
+    const headerHeight = () => header?.offsetHeight ?? 0;
+    if (header) {
+      new ResizeObserver(() => root.style.setProperty("--svc-top", `${headerHeight()}px`)).observe(header);
+    }
+
+    // Below lg, scroll the bar so the highlighted item sits in its centre.
+    const centre = (slug: string) => {
+      const link = links.get(slug);
+      if (!isBar.matches || !link) return;
+      const b = bar.getBoundingClientRect();
+      const l = link.getBoundingClientRect();
+      const left = bar.scrollLeft + (l.left - b.left) - (b.width - l.width) / 2;
+      bar.scrollTo({ left: Math.max(0, left), behavior: reduce.matches ? "auto" : "smooth" });
+    };
 
     const highlight = (slug: string) => {
       links.get(active)?.removeAttribute("data-active");
@@ -78,11 +98,15 @@ import { url } from "../../lib/url";
       active = slug;
       links.get(slug)?.setAttribute("data-active", "");
       links.get(slug)?.setAttribute("aria-current", "location");
+      centre(slug);
     };
 
-    // The service with the most pixels on screen, below the sticky header, wins.
+    // What covers the top of the viewport: the header, plus the bar below lg.
+    const covered = () => (isBar.matches ? nav.getBoundingClientRect().bottom : headerHeight());
+
+    // The service with the most pixels on screen, below the sticky header (and bar), wins.
     const measure = () => {
-      const top = header?.getBoundingClientRect().bottom ?? 0;
+      const top = covered();
       let best = active;
       let bestPx = 0;
       for (const article of articles) {
@@ -92,14 +116,38 @@ import { url } from "../../lib/url";
       }
       if (best !== active) highlight(best);
     };
-    const schedule = () => {
+
+    // After a nav click, keep its highlight until the scroll it started has stopped.
+    const holdUntilIdle = () => {
+      clearTimeout(unlock);
+      unlock = window.setTimeout(() => { locked = false; }, 150);
+    };
+
+    const onScroll = () => {
+      if (locked) return holdUntilIdle();
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(measure);
     };
 
+    nav.addEventListener("click", (e) => {
+      const link = (e.target as Element).closest<HTMLElement>("[data-nav]");
+      const article = link && document.getElementById(link.dataset.nav!);
+      if (!link || !article) return;
+      e.preventDefault();
+      const offset = headerHeight() + (isBar.matches ? nav.offsetHeight : 0);
+      locked = true;
+      holdUntilIdle();
+      highlight(article.id);
+      history.replaceState(null, "", `#${article.id}`);
+      scrollTo({
+        top: scrollY + article.getBoundingClientRect().top - offset,
+        behavior: reduce.matches ? "auto" : "smooth",
+      });
+    });
+
     highlight(active);
     measure();
-    addEventListener("scroll", schedule, { passive: true });
-    addEventListener("resize", schedule);
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", onScroll);
   }
 </script>
