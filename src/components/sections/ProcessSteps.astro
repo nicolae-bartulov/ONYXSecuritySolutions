@@ -2,7 +2,8 @@
 // "Cum lucrăm" on the homepage: the four steps as a timeline. A vertical list below md, a 2x2
 // grid from md, one row joined by a line from lg. Each step has a cut-corner marker with its icon.
 // When the section scrolls into view, the gold line fills from step 1 to step 4 and each marker
-// turns gold as the line reaches it, once. Without JS or with reduced motion it shows filled.
+// turns gold as the line reaches it; it resets once the section leaves the viewport and plays
+// again on the next visit. Without JS or with reduced motion it shows filled.
 import SectionHeading from "../ui/SectionHeading.astro";
 import IconConsultanta from "../icons/IconConsultanta.astro";
 import IconProiectare from "../icons/IconProiectare.astro";
@@ -83,15 +84,15 @@ const last = steps.length - 1;
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
     for (const root of document.querySelectorAll<HTMLElement>("[data-steps]")) {
       root.setAttribute("data-armed", "");
-      const observer = new IntersectionObserver(
+      // Fill once 40% is on screen; reset (instantly, the transitions only run while revealed)
+      // when it has left the viewport entirely, so it plays again on the next visit.
+      new IntersectionObserver(
         ([entry]) => {
-          if (!entry.isIntersecting) return;
-          root.setAttribute("data-revealed", "");
-          observer.disconnect();
+          if (entry.intersectionRatio >= 0.4) root.setAttribute("data-revealed", "");
+          else if (!entry.isIntersecting) root.removeAttribute("data-revealed");
         },
-        { threshold: 0.4 },
-      );
-      observer.observe(root);
+        { threshold: [0, 0.4] },
+      ).observe(root);
     }
   }
 </script>
