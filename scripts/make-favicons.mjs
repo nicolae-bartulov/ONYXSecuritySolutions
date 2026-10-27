@@ -1,7 +1,7 @@
 // Generates the favicons in public/ from the trimmed panther icon logo.
-// favicon.ico (16, 32, 48) and favicon.png (48) put the panther on a brand-gold circle that fills the
-// canvas, with the panther centered and as large as the circle allows (its ear tips touch the edge);
-// apple-touch-icon.png (180) sits on a gold square, which iOS rounds itself.
+// favicon.ico (16, 32, 48) and favicon.png (48) put the panther on a brand-gold square, centered and
+// as large as the square allows (the whiskers reach the sides); apple-touch-icon.png (180) insets it,
+// since iOS rounds the corners and would clip the ears.
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
@@ -14,46 +14,23 @@ const gold = "#e3a600"; // --accent / brand-gold in global.css
 const art = await sharp(src).trim().png().toBuffer();
 const { width: artWidth, height: artHeight } = await sharp(art).metadata();
 
-/** Radius of the circle centered on the trimmed artwork that just contains it (the ear tips reach farthest). */
-const enclosing = async () => {
-  const { data, info } = await sharp(art).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  const [cx, cy] = [info.width / 2, info.height / 2];
-  let r = 0;
-  for (let y = 0; y < info.height; y++) {
-    for (let x = 0; x < info.width; x++) {
-      if (data[(y * info.width + x) * 4 + 3] > 128) r = Math.max(r, Math.hypot(x + 0.5 - cx, y + 0.5 - cy));
-    }
-  }
-  return r;
-};
-const reach = await enclosing();
-
-/** `size` px PNG: a gold `shape` ("circle" or "square") with the artwork, centered, with its enclosing circle at `fill` of its width. */
-const badge = async (size, shape, fill) => {
-  const ground =
-    shape === "circle"
-      ? `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="${gold}" />`
-      : `<rect width="${size}" height="${size}" fill="${gold}" />`;
-  const svg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">${ground}</svg>`);
-  const k = (size * fill) / (2 * reach);
+/** `size` px PNG: a gold square with the artwork centered, its longer side at `fill` of the width. */
+const square = async (size, fill) => {
+  const k = (size * fill) / Math.max(artWidth, artHeight);
   // Whole-pixel margins, equal on both sides, so small sizes stay exactly centered.
-  const left = Math.max(0, Math.round((size - artWidth * k) / 2));
-  const top = Math.max(0, Math.round((size - artHeight * k) / 2));
+  const left = Math.round((size - artWidth * k) / 2);
+  const top = Math.round((size - artHeight * k) / 2);
   const panther = await sharp(art)
     .resize(size - 2 * left, size - 2 * top, { fit: "fill" })
     .png()
     .toBuffer();
-  return sharp(svg)
-    .composite([
-      { input: panther, left, top },
-      // Clip anything the rounding pushed past the ground.
-      { input: svg, blend: "dest-in" },
-    ])
+  return sharp({ create: { width: size, height: size, channels: 4, background: gold } })
+    .composite([{ input: panther, left, top }])
     .png({ compressionLevel: 9 })
     .toBuffer();
 };
 
-const circle = (size) => badge(size, "circle", 1);
+const favicon = (size) => square(size, 1);
 
 /** ICO container holding PNG-encoded images (supported by every current browser). */
 function ico(images) {
@@ -75,8 +52,8 @@ function ico(images) {
 }
 
 const icoSizes = [16, 32, 48];
-const icoImages = await Promise.all(icoSizes.map(async (size) => ({ size, data: await circle(size) })));
+const icoImages = await Promise.all(icoSizes.map(async (size) => ({ size, data: await favicon(size) })));
 await writeFile(out("favicon.ico"), ico(icoImages));
-await writeFile(out("favicon.png"), await circle(48));
-await writeFile(out("apple-touch-icon.png"), await badge(180, "square", 0.86));
+await writeFile(out("favicon.png"), await favicon(48));
+await writeFile(out("apple-touch-icon.png"), await square(180, 0.8));
 console.log("Wrote favicon.ico, favicon.png, apple-touch-icon.png");
