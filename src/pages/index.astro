@@ -5,6 +5,7 @@ import SectionHeading from "../components/ui/SectionHeading.astro";
 import Button from "../components/ui/Button.astro";
 import HeroPanther from "../components/sections/HeroPanther.astro";
 import ServicesShowcase from "../components/sections/ServicesShowcase.astro";
+import ProcessSteps from "../components/sections/ProcessSteps.astro";
 import CtaBand from "../components/sections/CtaBand.astro";
 import landscapeLogo from "../assets/brand/logos/onyx-landscape-on-dark.png";
 import { cta, site } from "../data/site";
@@ -28,13 +29,6 @@ const jsonLd = {
   openingHours: site.contact.openingHours,
   knowsAbout: services.map((s) => s.name),
 };
-
-const steps = [
-  { title: "Consultanță", text: "Discutăm nevoile dumneavoastră și evaluăm riscurile la fața locului." },
-  { title: "Proiectare", text: "Alegem echipamentele și planificăm fiecare punct al sistemului." },
-  { title: "Instalare", text: "Montăm, configurăm și testăm sistemul, apoi vă arătăm cum îl folosiți." },
-  { title: "Mentenanță", text: "Verificăm periodic sistemul și intervenim rapid când este nevoie." },
-];
 
 const audiences = [
   { title: "Locuințe", text: "Case și apartamente protejate discret, cu control de pe telefon." },
@@ -64,16 +58,7 @@ const audiences = [
   </Section>
 
   <Section>
-    <SectionHeading eyebrow="Cum lucrăm">De la evaluare la mentenanță.</SectionHeading>
-    <ol class="m-0 mt-8 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-4">
-      {steps.map((step, i) => (
-        <li class="flex flex-col gap-3 border-t border-line pt-6">
-          <span class="text-eyebrow uppercase text-accent-ink">{String(i + 1).padStart(2, "0")}</span>
-          <h3 class="m-0 text-title uppercase">{step.title}</h3>
-          <p class="m-0 text-small text-ink-muted">{step.text}</p>
-        </li>
-      ))}
-    </ol>
+    <ProcessSteps />
   </Section>
 
   <Section class="pt-0 md:pt-0">
