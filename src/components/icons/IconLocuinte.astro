@@ -1,0 +1,10 @@
+---
+// House for the "Locuințe" audience, drawn on the same 32px grid (1.5px stroke, square caps).
+import type { HTMLAttributes } from "astro/types";
+type Props = HTMLAttributes<"svg">;
+---
+<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="square" aria-hidden="true" {...Astro.props}>
+  <path d="M4 15L16 5l12 10" />
+  <path d="M7 13v14h18V13" />
+  <path d="M13 27v-8h6v8" />
+</svg>
