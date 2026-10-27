@@ -43,7 +43,7 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
     </div>
 
     <!-- lg and up: the full list -->
-    <ul class="m-0 hidden list-none flex-col p-0 lg:flex">
+    <ul data-list class="m-0 hidden list-none flex-col p-0 lg:flex">
       {services.map(({ slug, name, line, Icon }, i) => (
         <li>
           <a href={url(`/solutii#${slug}`)} data-item data-active={i === 0 ? "" : undefined}
@@ -52,13 +52,11 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
               {String(i + 1).padStart(2, "0")}
             </span>
             <span class="h-0.5 w-0 shrink-0 bg-accent transition-[width] duration-150 group-data-active:w-10" aria-hidden="true" />
-            <span class="flex min-w-0 flex-col gap-1">
-              <span class="flex items-center gap-3">
-                <span class="text-title uppercase text-ink-muted transition-colors duration-150 group-hover:text-ink group-data-active:text-ink">{name}</span>
-                <Icon class="size-6 shrink-0 text-ink-muted group-data-active:text-accent light:group-data-active:text-ink" />
-              </span>
+            <span class="flex min-w-0 flex-1 flex-col gap-1">
+              <span class="text-title uppercase text-ink-muted transition-colors duration-150 group-hover:text-ink group-data-active:text-ink">{name}</span>
               <span class="text-small text-ink-muted">{line}</span>
             </span>
+            <Icon class="size-8 shrink-0 text-ink-muted group-data-active:text-accent light:group-data-active:text-ink" />
             <span data-progress class="absolute -bottom-px left-0 h-0.5 w-0 bg-accent" aria-hidden="true" />
           </a>
         </li>
@@ -129,6 +127,7 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
 
 <script>
   for (const root of document.querySelectorAll<HTMLElement>("[data-services-showcase]")) {
+    const list = root.querySelector<HTMLElement>("[data-list]")!;
     const items = [...root.querySelectorAll<HTMLElement>("[data-item]")];
     const groups = [items, [...root.querySelectorAll<HTMLElement>("[data-pane]")], [...root.querySelectorAll<HTMLElement>("[data-slide]")]];
     const counter = root.querySelector<HTMLElement>("[data-counter]")!;
@@ -160,10 +159,10 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
       button.addEventListener("click", () => select((active + Number(button.dataset.step) + count) % count));
     }
 
-    // Pause while a mouse is over it or keyboard focus is inside. Touch taps and arrow clicks
-    // don't count, so autoplay carries on from the newly selected service.
-    root.addEventListener("pointerenter", (e) => { hovered = e.pointerType === "mouse"; update(); });
-    root.addEventListener("pointerleave", () => { hovered = false; update(); });
+    // Pause while a mouse is over the list (not the image) or keyboard focus is inside. Touch taps
+    // and arrow clicks don't count, so autoplay carries on from the newly selected service.
+    list.addEventListener("pointerenter", (e) => { hovered = e.pointerType === "mouse"; update(); });
+    list.addEventListener("pointerleave", () => { hovered = false; update(); });
     root.addEventListener("focusin", (e) => { focused = (e.target as Element).matches(":focus-visible"); update(); });
     root.addEventListener("focusout", (e) => {
       if (!root.contains(e.relatedTarget as Node | null)) { focused = false; update(); }
