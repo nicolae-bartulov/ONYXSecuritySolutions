@@ -1,6 +1,6 @@
 // Generates the favicons in public/ from the trimmed panther icon logo.
 // favicon.ico (16, 32, 48) and favicon.png (48) put the panther on a brand-gold circle that fills the
-// canvas, with the panther as large as the circle allows (its ear tips touch the edge);
+// canvas, with the panther centered and as large as the circle allows (its ear tips touch the edge);
 // apple-touch-icon.png (180) sits on a gold square, which iOS rounds itself.
 import { writeFile } from "node:fs/promises";
 import path from "node:path";
@@ -14,53 +14,38 @@ const gold = "#e3a600"; // --accent / brand-gold in global.css
 const art = await sharp(src).trim().png().toBuffer();
 const { width: artWidth, height: artHeight } = await sharp(art).metadata();
 
-/**
- * Smallest circle around the artwork, centered on its vertical axis (the panther is symmetric).
- * Only the outermost opaque pixel of each row can be farthest from such a center.
- */
+/** Radius of the circle centered on the trimmed artwork that just contains it (the ear tips reach farthest). */
 const enclosing = async () => {
   const { data, info } = await sharp(art).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  const cx = info.width / 2;
-  const rows = [];
+  const [cx, cy] = [info.width / 2, info.height / 2];
+  let r = 0;
   for (let y = 0; y < info.height; y++) {
-    let reach = -1;
     for (let x = 0; x < info.width; x++) {
-      if (data[(y * info.width + x) * 4 + 3] > 128) reach = Math.max(reach, Math.abs(x + 0.5 - cx));
+      if (data[(y * info.width + x) * 4 + 3] > 128) r = Math.max(r, Math.hypot(x + 0.5 - cx, y + 0.5 - cy));
     }
-    if (reach >= 0) rows.push([y + 0.5, reach]);
   }
-  const radius = (cy) => Math.max(...rows.map(([y, dx]) => Math.hypot(dx, y - cy)));
-  // radius(cy) is convex, so a ternary search finds the best center.
-  let [lo, hi] = [0, info.height];
-  for (let i = 0; i < 60; i++) {
-    const a = lo + (hi - lo) / 3;
-    const b = hi - (hi - lo) / 3;
-    if (radius(a) < radius(b)) hi = b;
-    else lo = a;
-  }
-  return { cx, cy: lo, r: radius(lo) };
+  return r;
 };
-const fit = await enclosing();
+const reach = await enclosing();
 
-/** `size` px PNG: a gold `shape` ("circle" or "square") with the artwork's enclosing circle at `fill` of its width. */
+/** `size` px PNG: a gold `shape` ("circle" or "square") with the artwork, centered, with its enclosing circle at `fill` of its width. */
 const badge = async (size, shape, fill) => {
   const ground =
     shape === "circle"
       ? `<circle cx="${size / 2}" cy="${size / 2}" r="${size / 2}" fill="${gold}" />`
       : `<rect width="${size}" height="${size}" fill="${gold}" />`;
   const svg = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">${ground}</svg>`);
-  const k = (size * fill) / (2 * fit.r);
+  const k = (size * fill) / (2 * reach);
+  // Whole-pixel margins, equal on both sides, so small sizes stay exactly centered.
+  const left = Math.max(0, Math.round((size - artWidth * k) / 2));
+  const top = Math.max(0, Math.round((size - artHeight * k) / 2));
   const panther = await sharp(art)
-    .resize(Math.round(artWidth * k), Math.round(artHeight * k))
+    .resize(size - 2 * left, size - 2 * top, { fit: "fill" })
     .png()
     .toBuffer();
   return sharp(svg)
     .composite([
-      {
-        input: panther,
-        left: Math.max(0, Math.round(size / 2 - fit.cx * k)),
-        top: Math.max(0, Math.round(size / 2 - fit.cy * k)),
-      },
+      { input: panther, left, top },
       // Clip anything the rounding pushed past the ground.
       { input: svg, blend: "dest-in" },
     ])
