@@ -43,7 +43,7 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
     </div>
 
     <!-- lg and up: the full list -->
-    <ul class="m-0 hidden list-none flex-col p-0 lg:flex">
+    <ul data-list class="m-0 hidden list-none flex-col p-0 lg:flex">
       {services.map(({ slug, name, line, Icon }, i) => (
         <li>
           <a href={url(`/solutii#${slug}`)} data-item data-active={i === 0 ? "" : undefined}
@@ -52,13 +52,11 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
               {String(i + 1).padStart(2, "0")}
             </span>
             <span class="h-0.5 w-0 shrink-0 bg-accent transition-[width] duration-150 group-data-active:w-10" aria-hidden="true" />
-            <span class="flex min-w-0 flex-col gap-1">
-              <span class="flex items-center gap-3">
-                <span class="text-title uppercase text-ink-muted transition-colors duration-150 group-hover:text-ink group-data-active:text-ink">{name}</span>
-                <Icon class="size-6 shrink-0 text-ink-muted group-data-active:text-accent light:group-data-active:text-ink" />
-              </span>
+            <span class="flex min-w-0 flex-1 flex-col gap-1">
+              <span class="text-title uppercase text-ink-muted transition-colors duration-150 group-hover:text-ink group-data-active:text-ink">{name}</span>
               <span class="text-small text-ink-muted">{line}</span>
             </span>
+            <Icon class="mr-6 size-12 shrink-0 text-ink-muted group-data-active:text-accent light:group-data-active:text-ink" />
             <span data-progress class="absolute -bottom-px left-0 h-0.5 w-0 bg-accent" aria-hidden="true" />
           </a>
         </li>
@@ -74,16 +72,18 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
             <span class="text-eyebrow text-accent-ink">{String(i + 1).padStart(2, "0")}</span>
           </div>
           <div class="flex items-center justify-between gap-4">
-            <h3 class="m-0 flex min-w-0 items-center gap-3 text-title uppercase">
-              {name}
-              <Icon class="size-6 shrink-0 text-accent light:text-ink" />
-            </h3>
-            <svg class="size-8 shrink-0 -rotate-90 motion-reduce:hidden" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-              <circle cx="16" cy="16" r="14" stroke-width="2" class="stroke-line" />
-              <circle data-ring cx="16" cy="16" r="14" stroke-width="2" class="stroke-accent" />
-            </svg>
+            <div class="flex min-w-0 flex-col gap-3">
+              <h3 class="m-0 text-title uppercase">{name}</h3>
+              <p class="m-0 text-body text-ink md:text-body-lg">{line}</p>
+            </div>
+            <span class="relative grid size-16 shrink-0 place-items-center" aria-hidden="true">
+              <svg class="absolute inset-0 size-full -rotate-90" viewBox="0 0 64 64" fill="none">
+                <circle cx="32" cy="32" r="31" stroke-width="2" class="stroke-line" />
+                <circle data-ring cx="32" cy="32" r="31" stroke-width="2" class="stroke-accent motion-reduce:hidden" />
+              </svg>
+              <Icon class="size-8 text-accent light:text-ink" />
+            </span>
           </div>
-          <p class="m-0 text-body text-ink md:text-body-lg">{line}</p>
           <a href={url(`/solutii#${slug}`)} class="inline-flex min-h-11 items-center gap-2 self-start text-button uppercase text-accent-ink no-underline transition-colors duration-150 hover:text-ink">
             Detalii
             <svg class="size-4" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M6 16h20M19 9l7 7-7 7" /></svg>
@@ -110,8 +110,8 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
      selects the next service. Only one of them is displayed, so only one runs at a time.
      global.css turns animations off for prefers-reduced-motion, which also stops autoplay. */
   [data-ring] {
-    stroke-dasharray: 87.97; /* 2π × 14 */
-    stroke-dashoffset: 87.97;
+    stroke-dasharray: 194.78; /* 2π × 31 */
+    stroke-dashoffset: 194.78;
   }
   [data-playing] [data-active] [data-progress] {
     animation: svc-progress var(--svc-interval) linear forwards;
@@ -129,6 +129,7 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
 
 <script>
   for (const root of document.querySelectorAll<HTMLElement>("[data-services-showcase]")) {
+    const list = root.querySelector<HTMLElement>("[data-list]")!;
     const items = [...root.querySelectorAll<HTMLElement>("[data-item]")];
     const groups = [items, [...root.querySelectorAll<HTMLElement>("[data-pane]")], [...root.querySelectorAll<HTMLElement>("[data-slide]")]];
     const counter = root.querySelector<HTMLElement>("[data-counter]")!;
@@ -160,10 +161,10 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
       button.addEventListener("click", () => select((active + Number(button.dataset.step) + count) % count));
     }
 
-    // Pause while a mouse is over it or keyboard focus is inside. Touch taps and arrow clicks
-    // don't count, so autoplay carries on from the newly selected service.
-    root.addEventListener("pointerenter", (e) => { hovered = e.pointerType === "mouse"; update(); });
-    root.addEventListener("pointerleave", () => { hovered = false; update(); });
+    // Pause while a mouse is over the list (not the image) or keyboard focus is inside. Touch taps
+    // and arrow clicks don't count, so autoplay carries on from the newly selected service.
+    list.addEventListener("pointerenter", (e) => { hovered = e.pointerType === "mouse"; update(); });
+    list.addEventListener("pointerleave", () => { hovered = false; update(); });
     root.addEventListener("focusin", (e) => { focused = (e.target as Element).matches(":focus-visible"); update(); });
     root.addEventListener("focusout", (e) => {
       if (!root.contains(e.relatedTarget as Node | null)) { focused = false; update(); }
