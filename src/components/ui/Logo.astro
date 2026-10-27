@@ -24,11 +24,11 @@ const alt = "Onyx Security Solutions";
 ---
 <span class:list={["inline-flex items-center", cls]}>
   {ground !== "light" && (
-    <Image src={art.dark} alt={alt} height={height}
+    <Image src={art.dark} alt={alt} height={height} densities={[1, 2]}
       class:list={["block w-auto", !ground && "light:hidden"]} style={`height:${height}px`} />
   )}
   {ground !== "dark" && (
-    <Image src={art.light} alt={ground ? alt : ""} aria-hidden={ground ? undefined : "true"} height={height}
+    <Image src={art.light} alt={ground ? alt : ""} aria-hidden={ground ? undefined : "true"} height={height} densities={[1, 2]}
       class:list={["w-auto", ground ? "block" : "hidden light:block"]} style={`height:${height}px`} />
   )}
 </span>
