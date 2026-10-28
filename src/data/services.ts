@@ -132,9 +132,9 @@ export const services: Service[] = [
     name: "Consultanță",
     line: "Soluția potrivită, de la început.", // TODO(content): not in the design doc
     summary:
-      "Evaluăm riscurile locației și vă recomandăm soluția potrivită nevoilor și bugetului dumneavoastră.",
+      "Vă ascultăm nevoile și vă recomandăm soluția potrivită pentru spațiul și bugetul dumneavoastră.",
     details: [
-      "Evaluarea riscurilor la fața locului",
+      "Vizită la fața locului",
       "Recomandări de echipamente și soluții",
       "Analiza sistemelor existente",
       "Estimare de buget",
