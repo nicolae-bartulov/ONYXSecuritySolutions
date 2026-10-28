@@ -7,7 +7,6 @@ export const serviceSlugs = [
   "automatizari-porti",
   "service-mentenanta",
   "consultanta",
-  "proiectare",
 ] as const;
 
 export type ServiceSlug = (typeof serviceSlugs)[number];

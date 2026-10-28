@@ -6,13 +6,11 @@
 // again on the next visit. Without JS or with reduced motion it shows filled.
 import SectionHeading from "../ui/SectionHeading.astro";
 import IconConsultanta from "../icons/IconConsultanta.astro";
-import IconProiectare from "../icons/IconProiectare.astro";
 import IconInstalare from "../icons/IconInstalare.astro";
 import IconService from "../icons/IconService.astro";
 
 const steps = [
   { title: "Consultanță", text: "Discutăm nevoile dumneavoastră și evaluăm riscurile la fața locului.", Icon: IconConsultanta },
-  { title: "Proiectare", text: "Alegem echipamentele și planificăm fiecare punct al sistemului.", Icon: IconProiectare },
   { title: "Instalare", text: "Montăm, configurăm și testăm sistemul, apoi vă arătăm cum îl folosiți.", Icon: IconInstalare },
   { title: "Mentenanță", text: "Verificăm periodic sistemul și intervenim rapid când este nevoie.", Icon: IconService },
 ];
@@ -31,7 +29,7 @@ const last = steps.length - 1;
     <span class="absolute top-7 right-0 left-7 hidden h-px bg-line lg:block" aria-hidden="true"></span>
     <span data-fill class="fill-x track absolute top-[27px] right-0 left-7 hidden h-0.5 bg-accent lg:block" aria-hidden="true"></span>
 
-    <ol class="relative m-0 grid list-none gap-8 p-0 md:grid-cols-2 md:gap-x-8 md:gap-y-10 lg:grid-cols-4">
+    <ol class="relative m-0 grid list-none gap-8 p-0 md:grid-cols-2 md:gap-x-8 md:gap-y-10 lg:grid-cols-3">
       {steps.map(({ title, text, Icon }, i) => (
         <li class="relative flex gap-5 md:flex-col md:pt-6 lg:gap-6 lg:pt-0" style={`--i:${i}`}>
           {/* md: a hairline opens each step. */}
@@ -69,13 +67,13 @@ const last = steps.length - 1;
   [data-armed] .fill-y { transform: scaleY(0); }
   [data-armed] [data-marker] { border-color: var(--line); }
 
-  /* Each step starts 350ms after the previous one; the lg track crosses all four in 1400ms. */
+  /* Each step starts 350ms after the previous one; the lg track crosses all three in 1050ms. */
   [data-armed][data-revealed] [data-fill] { transform: none; }
   [data-armed][data-revealed] [data-marker] {
     border-color: var(--accent);
     transition: border-color 300ms ease calc(var(--i) * 350ms);
   }
-  [data-armed][data-revealed] .track { transition: transform 1400ms linear; }
+  [data-armed][data-revealed] .track { transition: transform 1050ms linear; }
   [data-armed][data-revealed] .hairline { transition: transform 500ms ease-out calc(var(--i) * 350ms); }
   [data-armed][data-revealed] .fill-y { transition: transform 350ms linear calc(var(--i) * 350ms + 150ms); }
 </style>

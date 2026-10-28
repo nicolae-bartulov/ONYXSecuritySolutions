@@ -9,24 +9,24 @@ import { site } from "../data/site";
 // The tagline doubles as how we work. Titles stay in English, as the tagline does.
 const values = [
   { title: "Consult.", text: "Ascultăm înainte să recomandăm. Evaluăm locația, riscurile și modul în care folosiți spațiul." },
-  { title: "Design.", text: "Proiectăm un sistem pe măsură, cu echipamente alese pentru condițiile reale, nu din catalog." },
+  { title: "Design.", text: "Alcătuim un sistem pe măsură, cu echipamente alese pentru condițiile reale, nu din catalog." },
   { title: "Secure.", text: "Instalăm, testăm și rămânem alături de dumneavoastră prin service și mentenanță." },
 ];
 
 // TODO(content): confirm each claim with the company before launch
 const reasons = [
   { title: "Firmă licențiată", text: `Lucrăm conform legislației privind securitatea fizică, cu licență IGPR ${site.legal.igprLicense}.` },
-  { title: "Echipă proprie", text: "Aceiași oameni proiectează, instalează și întrețin sistemul. Știți mereu cu cine vorbiți." },
+  { title: "Echipă proprie", text: "Aceiași oameni recomandă, instalează și întrețin sistemul. Știți mereu cu cine vorbiți." },
   { title: "Echipamente verificate", text: "Folosim echipamente de la producători consacrați, cu garanție și piese disponibile." },
   { title: "Mentenanță", text: "Verificări periodice și intervenții rapide, pentru sisteme care funcționează atunci când contează." },
 ];
 ---
 <BaseLayout title="Despre noi"
-  description="Onyx Security Solutions proiectează, instalează și întreține sisteme de securitate. Aflați cine suntem și cum lucrăm.">
+  description="Onyx Security Solutions recomandă, instalează și întreține sisteme de securitate. Aflați cine suntem și cum lucrăm.">
   <Section>
     <div class="grid items-center gap-12 md:grid-cols-2">
       <SectionHeading as="h1" size="display" eyebrow="Despre noi"
-        lead="Suntem o echipă de specialiști în sisteme de securitate. Proiectăm, instalăm și întreținem soluții pentru locuințe, companii și instituții.">
+        lead="Suntem o echipă de specialiști în sisteme de securitate. Recomandăm, instalăm și întreținem soluții pentru locuințe, companii și instituții.">
         Securitate gândită de la început.
       </SectionHeading>
       <ImagePlaceholder chamfer="lg" />
@@ -42,7 +42,7 @@ const reasons = [
           [Povestea firmei: când a fost înființată, cine o conduce și ce a determinat-o să se specializeze în sisteme de securitate.]
         </p>
         <p class="m-0">
-          Credem că un sistem de securitate bun nu se vede până nu ai nevoie de el. De aceea începem fiecare proiect cu o evaluare
+          Credem că un sistem de securitate bun nu se vede până nu ai nevoie de el. De aceea începem fiecare lucrare cu o evaluare
           atentă și terminăm abia după ce sistemul funcționează exact cum v-ați propus.
         </p>
       </div>
@@ -63,7 +63,7 @@ const reasons = [
   </Section>
 
   <Section>
-    <SectionHeading eyebrow="De ce Onyx">Un singur partener, de la proiect la service.</SectionHeading>
+    <SectionHeading eyebrow="De ce Onyx">Un singur partener, de la evaluare la service.</SectionHeading>
     <ul class="m-0 mt-8 grid list-none grid-cols-1 gap-6 p-0 sm:grid-cols-2 lg:grid-cols-4">
       {reasons.map((r) => (
         <li class="flex flex-col gap-3 border-t border-line pt-6">

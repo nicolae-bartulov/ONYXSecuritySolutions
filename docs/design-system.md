@@ -480,7 +480,6 @@ import Logo from "../ui/Logo.astro";
 import Button from "../ui/Button.astro";
 const links = [
   { label: "Soluții", href: "/solutii" },
-  { label: "Proiecte", href: "/proiecte" },
   { label: "Despre noi", href: "/despre-noi" },
   { label: "Contact", href: "/contact" },
 ];
@@ -571,7 +570,6 @@ Services, in this order, with their lines:
 | Automatizări porți | Confort și siguranță zilnică. |
 | Service & mentenanță | — |
 | Consultanță | — |
-| Proiectare | — |
 
 Reference headlines: "Consult. Design. Secure.", "Tehnologie pentru siguranță reală.", "Sisteme de securitate pentru locuințe, companii și instituții."
 
@@ -590,7 +588,7 @@ Reference headlines: "Consult. Design. Secure.", "Tehnologie pentru siguranță 
 
 - Thin line icons: 1.5px stroke on a 32px grid, square caps, `currentColor`. Gold on dark, ink on light. A short gold rule under service icons.
 - No emoji, no filled or duotone icons.
-- The official icon set (CCTV, Antifracție, Interfonie, Control acces, Automatizări porți, Service & mentenanță, Consultanță, Proiectare) is shown on the moodboard but **not supplied as files yet**. Until it is, use placeholders in that style and replace them later.
+- The official icon set (CCTV, Antifracție, Interfonie, Control acces, Automatizări porți, Service & mentenanță, Consultanță) is shown on the moodboard but **not supplied as files yet**. Until it is, use placeholders in that style and replace them later.
 
 ## 8. States
 
