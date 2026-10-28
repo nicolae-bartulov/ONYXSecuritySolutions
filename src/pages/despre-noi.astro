@@ -2,9 +2,10 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/ui/Section.astro";
 import SectionHeading from "../components/ui/SectionHeading.astro";
-import ImagePlaceholder from "../components/ui/ImagePlaceholder.astro";
+import HeroBanner from "../components/sections/HeroBanner.astro";
 import CtaBand from "../components/sections/CtaBand.astro";
 import { site } from "../data/site";
+import heroMaintenance from "../assets/services/service_mententanta_homepage_image.png";
 
 // The tagline doubles as how we work. Titles stay in English, as the tagline does.
 const values = [
@@ -23,17 +24,11 @@ const reasons = [
 ---
 <BaseLayout title="Despre noi"
   description="Onyx Security Solutions recomandă, instalează și întreține sisteme de securitate. Aflați cine suntem și cum lucrăm.">
-  <Section>
-    <div class="grid items-center gap-12 md:grid-cols-2">
-      <SectionHeading as="h1" size="display" eyebrow="Despre noi"
-        lead="Suntem o echipă de specialiști în sisteme de securitate. Recomandăm, instalăm și întreținem soluții pentru locuințe, companii și instituții.">
-        Securitate gândită de la început.
-      </SectionHeading>
-      <ImagePlaceholder chamfer="lg" />
-    </div>
-  </Section>
+  <HeroBanner eyebrow="Despre noi" headline="Securitate gândită de la început."
+    body="Suntem o echipă de specialiști în sisteme de securitate. Recomandăm, instalăm și întreținem soluții pentru locuințe, companii și instituții."
+    images={[heroMaintenance]} />
 
-  <Section class="pt-0 md:pt-0">
+  <Section>
     <div class="grid gap-12 md:grid-cols-[1fr_2fr]">
       <SectionHeading eyebrow="Cine suntem">Oamenii din spatele sistemelor.</SectionHeading>
       {/* TODO(content): company story, founding year, team size */}
