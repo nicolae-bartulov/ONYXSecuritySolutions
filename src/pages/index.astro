@@ -1,13 +1,14 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Section from "../components/ui/Section.astro";
-import SectionHeading from "../components/ui/SectionHeading.astro";
-import Button from "../components/ui/Button.astro";
-import HeroPanther from "../components/sections/HeroPanther.astro";
+import HeroBanner from "../components/sections/HeroBanner.astro";
 import ServicesShowcase from "../components/sections/ServicesShowcase.astro";
 import ProcessSteps from "../components/sections/ProcessSteps.astro";
 import CtaBand from "../components/sections/CtaBand.astro";
 import landscapeLogo from "../assets/brand/logos/onyx-landscape-on-dark.png";
+import heroGate from "../assets/services/automatizare_porti_homepage_image.png";
+import heroCamera from "../assets/services/cctv_homepage_image.png";
+import heroReader from "../assets/services/control_access_homepage_image.png";
 import { cta, site } from "../data/site";
 import { url } from "../lib/url";
 import { services } from "../data/services";
@@ -31,21 +32,14 @@ const jsonLd = {
 };
 ---
 <BaseLayout jsonLd={jsonLd}>
-  <Section>
-    <div class="grid items-center gap-12 md:grid-cols-2">
-      <div class="flex flex-col gap-8">
-        <SectionHeading as="h1" size="display" eyebrow="Onyx Security Solutions"
-          lead="Sisteme de securitate pentru locuințe, companii și instituții. Alese, instalate și întreținute de aceeași echipă.">
-          Consult. Design. Secure.
-        </SectionHeading>
-        <div class="flex flex-wrap gap-4">
-          <Button href={cta.primary.href} size="lg">{cta.primary.label}</Button>
-          <Button href={cta.secondary.href} variant="secondary" size="lg">{cta.secondary.label}</Button>
-        </div>
-      </div>
-      <HeroPanther />
-    </div>
-  </Section>
+  <HeroBanner
+    eyebrow="Onyx Security Solutions"
+    headline="Consult. Design. Secure."
+    body="Sisteme de securitate pentru locuințe, companii și instituții. Alese, instalate și întreținute de aceeași echipă."
+    cta={cta.primary}
+    link={cta.secondary}
+    images={[heroGate, heroCamera, heroReader]}
+  />
 
   <Section>
     <ServicesShowcase />
