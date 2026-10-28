@@ -1,5 +1,8 @@
 ---
 import "@fontsource-variable/montserrat";
+// Preloaded so the fonts download alongside the stylesheet, not after it. Latin-ext carries ș ț ă.
+import fontLatin from "@fontsource-variable/montserrat/files/montserrat-latin-wght-normal.woff2?url";
+import fontLatinExt from "@fontsource-variable/montserrat/files/montserrat-latin-ext-wght-normal.woff2?url";
 import "../styles/global.css";
 import NavBar from "../components/layout/NavBar.astro";
 import Footer from "../components/layout/Footer.astro";
@@ -29,6 +32,8 @@ const structuredData = jsonLd && JSON.stringify(jsonLd).replace(/</g, "\\u003c")
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
+    <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fontLatinExt} as="font" type="font/woff2" crossorigin />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content={theme === "light" ? "#ffffff" : "#0f0f0f"} />

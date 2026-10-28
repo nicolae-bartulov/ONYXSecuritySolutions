@@ -7,6 +7,8 @@ export default defineConfig({
   site: "https://www.onyxsecurity.ro",
   trailingSlash: "never",
   integrations: [sitemap()],
+  // The stylesheet is small (~7 KB gzipped): inlining it saves a render-blocking request.
+  build: { inlineStylesheets: "always" },
   vite: {
     plugins: [tailwindcss()],
   },

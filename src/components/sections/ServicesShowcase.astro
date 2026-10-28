@@ -57,7 +57,7 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
               <span class="text-small text-ink-muted">{line}</span>
             </span>
             <Icon class="mr-6 size-12 shrink-0 text-ink-muted group-data-active:text-accent light:group-data-active:text-ink" />
-            <span data-progress class="absolute -bottom-px left-0 h-0.5 w-0 bg-accent" aria-hidden="true" />
+            <span data-progress class="absolute -bottom-px left-0 h-0.5 w-full origin-left scale-x-0 bg-accent" aria-hidden="true" />
           </a>
         </li>
       ))}
@@ -120,7 +120,7 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
     animation: svc-ring var(--svc-interval) linear forwards;
   }
   @keyframes svc-progress {
-    to { width: 100%; }
+    to { scale: 1 1; }
   }
   @keyframes svc-ring {
     to { stroke-dashoffset: 0; }
