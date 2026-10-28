@@ -11,6 +11,8 @@ import { Image } from "astro:assets";
 import Button from "../ui/Button.astro";
 
 interface Action { label: string; href: string }
+/** A photo, or a photo with its CSS object-position (centred by default). */
+type Slide = ImageMetadata | { src: ImageMetadata; position: string };
 interface Props {
   eyebrow?: string;
   headline?: string;
@@ -18,14 +20,15 @@ interface Props {
   cta?: Action;
   link?: Action;
   /** Background photos, shown in order. None: plain page background. */
-  images?: ImageMetadata[];
+  images?: Slide[];
   /** Time each photo stays up, in ms. */
   interval?: number;
   /** Opacity of the onyx tint over the photos, 0–1. */
   tint?: number;
 }
 const { eyebrow, headline, body, cta, link, images = [], interval = 6000, tint = 0.55 } = Astro.props;
-const hasImages = images.length > 0;
+const slides = images.map((s) => ("position" in s ? s : { src: s, position: undefined }));
+const hasImages = slides.length > 0;
 const hasText = Boolean(eyebrow || headline || body);
 const hasActions = Boolean(cta || link);
 ---
@@ -36,10 +39,11 @@ const hasActions = Boolean(cta || link);
   ]}>
   {hasImages && (
     <div aria-hidden="true">
-      {images.map((image, i) => (
-        <Image src={image} alt="" widths={[768, 1280, 1920]} sizes="100vw" loading={i === 0 ? "eager" : "lazy"}
+      {slides.map(({ src, position }, i) => (
+        <Image src={src} alt="" widths={[768, 1280, 1920]} sizes="100vw" loading={i === 0 ? "eager" : "lazy"}
           data-slide data-active={i === 0 ? "" : undefined}
-          class="absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-900 ease-in-out data-active:opacity-100" />
+          class="absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-900 ease-in-out data-active:opacity-100"
+          style={position && `object-position: ${position}`} />
       ))}
       <div class="absolute inset-0" style={`background: rgb(15 15 15 / ${tint})`}></div>
     </div>

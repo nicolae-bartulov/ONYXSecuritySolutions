@@ -7,7 +7,7 @@ import ProcessSteps from "../components/sections/ProcessSteps.astro";
 import CtaBand from "../components/sections/CtaBand.astro";
 import landscapeLogo from "../assets/brand/logos/onyx-landscape-on-dark.png";
 import heroGate from "../assets/services/automatizare_porti_homepage_image.png";
-import heroCamera from "../assets/services/cctv_homepage_image.png";
+import heroCamera from "../assets/services/CCTV.png";
 import heroReader from "../assets/services/control_access_homepage_image.png";
 import { cta, site } from "../data/site";
 import { url } from "../lib/url";
@@ -38,7 +38,7 @@ const jsonLd = {
     body="Sisteme de securitate pentru locuințe, companii și instituții. Alese, instalate și întreținute de aceeași echipă."
     cta={cta.primary}
     link={cta.secondary}
-    images={[heroGate, heroCamera, heroReader]}
+    images={[heroGate, { src: heroCamera, position: "50% 10%" }, heroReader]}
   />
 
   <Section>

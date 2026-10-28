@@ -29,12 +29,12 @@ const arrow = "inline-flex size-12 cursor-pointer items-center justify-center ro
   <div data-services-showcase data-playing style={`--svc-interval:${interval}ms`}
     class="grid gap-6 md:gap-8 lg:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] lg:gap-12">
     <div class="chamfer-lg relative aspect-[4/3] bg-surface-alt md:aspect-video lg:aspect-auto" aria-hidden="true">
-      {services.map(({ image }, i) => (
+      {services.map(({ image, imagePosition }, i) => (
         <div data-pane data-active={i === 0 ? "" : undefined}
           class="absolute inset-0 flex items-center justify-center p-6 opacity-0 transition-opacity duration-300 data-active:opacity-100 md:p-8">
           {image ? (
             <Image src={image} alt="" widths={[640, 960, 1280]} sizes="(min-width: 1024px) 58vw, 100vw"
-              class="absolute inset-0 size-full object-cover" />
+              class="absolute inset-0 size-full object-cover" style={imagePosition && `object-position: ${imagePosition}`} />
           ) : (
             <span class="text-center text-eyebrow uppercase text-ink">Fotografie în curând</span>
           )}
