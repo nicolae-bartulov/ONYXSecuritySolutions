@@ -6,7 +6,7 @@ export const site = {
   name: "Onyx Security Solutions",
   tagline: "Consult. Design. Secure.",
   description:
-    "Proiectăm, instalăm și întreținem sisteme de securitate pentru locuințe, companii și instituții: CCTV, antifracție, interfonie, control acces și automatizări porți.",
+    "Recomandăm, instalăm și întreținem sisteme de securitate pentru locuințe, companii și instituții: CCTV, antifracție, interfonie, control acces și automatizări porți.",
 
   contact: {
     phone: "[Telefon]", // TODO(content)

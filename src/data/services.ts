@@ -1,4 +1,4 @@
-// The eight services, in the order of design doc §5. Used by the home grid, /solutii and the quote form.
+// The seven services, in the order of design doc §5. Used by the home grid, /solutii and the quote form.
 // `line` comes from the design doc where it has one; the rest of the copy is a first draft (TODO(content)).
 import IconCctv from "../components/icons/IconCctv.astro";
 import IconAntifractie from "../components/icons/IconAntifractie.astro";
@@ -7,7 +7,6 @@ import IconControlAcces from "../components/icons/IconControlAcces.astro";
 import IconAutomatizari from "../components/icons/IconAutomatizari.astro";
 import IconService from "../components/icons/IconService.astro";
 import IconConsultanta from "../components/icons/IconConsultanta.astro";
-import IconProiectare from "../components/icons/IconProiectare.astro";
 import imgCctv from "../assets/services/cctv_homepage_image.png";
 import imgAntifractie from "../assets/services/antiefractie_homepage_image.png";
 import imgInterfonie from "../assets/services/interfonie_homepage_image.png";
@@ -143,21 +142,6 @@ export const services: Service[] = [
     Icon: IconConsultanta,
     image: imgConsultanta,
     imageAlt: "Plan de locuință văzut de sus, cu doi oameni în discuție",
-  },
-  {
-    slug: "proiectare",
-    name: "Proiectare",
-    line: "Fiecare detaliu, planificat.", // TODO(content): not in the design doc
-    summary:
-      "Proiecte tehnice pentru sisteme de securitate, conforme cu legislația în vigoare și cu cerințele beneficiarului.",
-    details: [
-      "Analiză de risc la securitatea fizică",
-      "Proiecte tehnice pentru sisteme de alarmă și supraveghere video",
-      "Documentație pentru avizare",
-      "Coordonarea execuției",
-    ],
-    Icon: IconProiectare,
-    // TODO(content): photo
   },
 ];
 

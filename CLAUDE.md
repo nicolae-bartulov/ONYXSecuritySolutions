@@ -16,9 +16,9 @@ A fully static site (no SSR adapter). All pages exist; most company details and 
 - `src/components/ui/` — design-system components from the doc (`Logo`, `Button`, `Eyebrow`, `SectionHeading`, `ServiceCard`, `TextField`) plus `Section` (standard padding/gutters), `ImagePlaceholder`, `SelectField`, `CheckboxField`.
 - `src/components/layout/` — `NavBar` (two links from `navLinks` plus the "Solicită ofertă" CTA, which is the way to `/contact`; desktop links from `lg`, menu button below), `Footer` (adds Acasă and Contact around `navLinks`).
 - `src/components/sections/` — page sections: `CtaBand`, `HeroPanther`, `ServicesShowcase`, `ProcessSteps`, `AudienceCards`, `QuoteForm`.
-- `src/components/icons/` — eight line icons, one per service, redrawn from the brand moodboard's iconography, plus `IconInstalare` (screwdriver) for the "Cum lucrăm" step and `IconLocuinte`, `IconCompanii`, `IconInstitutii` for the "Pentru cine" cards.
+- `src/components/icons/` — seven line icons, one per service, redrawn from the brand moodboard's iconography, plus `IconInstalare` (screwdriver) for the "Cum lucrăm" step and `IconLocuinte`, `IconCompanii`, `IconInstitutii` for the "Pentru cine" cards.
 - `src/lib/url.ts` — `url()` prefixes root-relative paths with the base path. GitHub Pages serves the site under `/ONYXSecuritySolutions` (the deploy workflow passes `--base`), so every internal link, `public/` file and absolute URL must go through `url()`; a bare `href="/contact"` breaks there.
-- `src/data/` — `site.ts` (contact, legal, nav links, CTAs, `formEndpoint`), `services.ts` (the eight services in order, with icon), `service-slugs.ts`.
+- `src/data/` — `site.ts` (contact, legal, nav links, CTAs, `formEndpoint`), `services.ts` (the seven services in order, with icon), `service-slugs.ts`.
 - `src/pages/` — `/`, `/solutii` (all services, anchors `#<slug>`), `/despre-noi`, `/contact`, `/politica-de-confidentialitate` (the only light-theme page), `404`, and `robots.txt.ts`.
 - `scripts/` — one-off image generators using sharp: `trim-logos.mjs` (run only on fresh logo exports), `make-favicons.mjs`, `make-og-image.mjs`.
 
