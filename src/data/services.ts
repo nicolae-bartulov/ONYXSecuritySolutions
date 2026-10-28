@@ -7,9 +7,9 @@ import IconControlAcces from "../components/icons/IconControlAcces.astro";
 import IconAutomatizari from "../components/icons/IconAutomatizari.astro";
 import IconService from "../components/icons/IconService.astro";
 import IconConsultanta from "../components/icons/IconConsultanta.astro";
-import imgCctv from "../assets/services/cctv_homepage_image.png";
-import imgAntifractie from "../assets/services/antiefractie_homepage_image.png";
-import imgInterfonie from "../assets/services/interfonie_homepage_image.png";
+import imgCctv from "../assets/services/CCTV.png";
+import imgAntifractie from "../assets/services/Antiefractie.png";
+import imgInterfonie from "../assets/services/Interfon.png";
 import imgControlAcces from "../assets/services/control_access_homepage_image.png";
 import imgAutomatizari from "../assets/services/automatizare_porti_homepage_image.png";
 import imgService from "../assets/services/service_mententanta_homepage_image.png";
@@ -28,6 +28,8 @@ export interface Service {
   /** Photo for the homepage showcase and /solutii; services without one show a placeholder. */
   image?: ImageMetadata;
   imageAlt?: string;
+  /** CSS object-position for the photo's crop; the frames centre it by default. */
+  imagePosition?: string;
 }
 
 export const services: Service[] = [
@@ -45,7 +47,8 @@ export const services: Service[] = [
     ],
     Icon: IconCctv,
     image: imgCctv,
-    imageAlt: "Cameră de supraveghere montată pe fațada unei case, la amurg",
+    imageAlt: "Cameră dome de supraveghere montată pe un perete întunecat",
+    imagePosition: "50% 10%",
   },
   {
     slug: "antifractie",
@@ -61,7 +64,8 @@ export const services: Service[] = [
     ],
     Icon: IconAntifractie,
     image: imgAntifractie,
-    imageAlt: "Tastatură de alarmă iluminată pe peretele unei locuințe",
+    imageAlt: "Senzor de alarmă montat pe perete, cu indicator luminos aprins",
+    imagePosition: "50% 10%",
   },
   {
     slug: "interfonie",
@@ -77,7 +81,8 @@ export const services: Service[] = [
     ],
     Icon: IconInterfonie,
     image: imgInterfonie,
-    imageAlt: "Videointerfon cu ecran montat lângă ușa de la intrare",
+    imageAlt: "Videointerfon cu cameră și butoane de apel, montat pe fațadă",
+    imagePosition: "50% 10%",
   },
   {
     slug: "control-acces",
