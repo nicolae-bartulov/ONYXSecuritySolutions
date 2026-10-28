@@ -10,7 +10,7 @@ import { serviceOptions } from "../../data/services";
 import { url } from "../../lib/url";
 
 interface Props { id?: string; class?: string }
-const { id = "oferta", class: cls } = Astro.props;
+const { id, class: cls } = Astro.props;
 const endpoint = site.formEndpoint;
 
 if (!endpoint) {
@@ -20,7 +20,7 @@ if (!endpoint) {
 // Romanian numbers: 0 / +40 / 0040, then 2xx, 3xx or 7xx and six more digits, optional separators.
 const phonePattern = String.raw`(\+40|0040|0)\s?[237]\d{2}([\s.\-]?\d{3}){2}`;
 ---
-<div id={id} class:list={["scroll-mt-28", cls]}>
+<div id={id} class={cls}>
   <form method="post" action={endpoint || undefined} novalidate data-quote-form data-endpoint={endpoint}
     data-phone={site.contact.phone} class="grid gap-6 sm:grid-cols-2">
     <TextField id="nume" label="Nume" required autocomplete="name" />
