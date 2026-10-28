@@ -41,6 +41,7 @@ const hasActions = Boolean(cta || link);
     <div aria-hidden="true">
       {slides.map(({ src, position }, i) => (
         <Image src={src} alt="" widths={[768, 1280, 1920]} sizes="100vw" loading={i === 0 ? "eager" : "lazy"}
+          fetchpriority={i === 0 ? "high" : "low"}
           data-slide data-active={i === 0 ? "" : undefined}
           class="absolute inset-0 size-full object-cover opacity-0 transition-opacity duration-900 ease-in-out data-active:opacity-100"
           style={position && `object-position: ${position}`} />
