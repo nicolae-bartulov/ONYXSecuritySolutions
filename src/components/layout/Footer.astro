@@ -11,14 +11,18 @@ const year = new Date().getFullYear();
 const link = "inline-flex min-h-11 items-center text-ink no-underline underline-offset-4 decoration-accent hover:underline md:min-h-0";
 ---
 <footer class="bg-surface-alt [--accent-ink:var(--ink)] px-4 py-12 text-small text-ink md:px-12">
-  <div class="mx-auto grid max-w-7xl gap-12 md:grid-cols-[2fr_1fr_1fr]">
-    <div class="flex flex-col items-start gap-6">
-      <Logo variant="landscape" height={32} />
-      <Eyebrow rule="both">{site.tagline}</Eyebrow>
+  {/* Below lg: the brand block spans the width (a row from md), with Navigație and Contact side by side
+      under it. From lg: three columns. */}
+  <div class="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-[2fr_1fr_1fr] lg:gap-12">
+    <div class="col-span-2 flex flex-col items-start gap-6 md:flex-row md:justify-between md:gap-12 lg:col-span-1 lg:flex-col lg:justify-start lg:gap-6">
+      <div class="flex flex-col items-start gap-6">
+        <Logo variant="landscape" height={32} />
+        <Eyebrow rule="both">{site.tagline}</Eyebrow>
+      </div>
       <p class="m-0 max-w-[38ch]">{site.description}</p>
     </div>
 
-    <nav aria-labelledby="footer-nav" class="flex flex-col gap-4">
+    <nav aria-labelledby="footer-nav" class="flex min-w-0 flex-col gap-4">
       <h2 id="footer-nav" class="m-0 text-eyebrow uppercase text-ink">Navigație</h2>
       <ul class="m-0 flex list-none flex-col p-0 md:gap-2">
         <li><a href={url("/")} class={link}>Acasă</a></li>
@@ -27,9 +31,9 @@ const link = "inline-flex min-h-11 items-center text-ink no-underline underline-
       </ul>
     </nav>
 
-    <div class="flex flex-col gap-4">
+    <div class="flex min-w-0 flex-col gap-4">
       <h2 class="m-0 text-eyebrow uppercase text-ink">Contact</h2>
-      <address class="flex flex-col items-start not-italic md:gap-2">
+      <address class="flex flex-col items-start not-italic wrap-anywhere md:gap-2">
         <a href={site.contact.phoneHref} class={link}>{site.contact.phone}</a>
         <a href={`mailto:${site.contact.email}`} class={link}>{site.contact.email}</a>
         <span>{site.contact.address}</span>
