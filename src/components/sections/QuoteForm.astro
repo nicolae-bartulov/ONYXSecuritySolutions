@@ -1,5 +1,5 @@
 ---
-// Quote request form. Posts to site.formEndpoint; while that is empty it explains that
+// Quote request form, sent through Web3Forms (site.form). Without an access key it explains that
 // the form is not active yet and gives the phone number instead of submitting.
 import TextField from "../ui/TextField.astro";
 import SelectField from "../ui/SelectField.astro";
@@ -11,10 +11,11 @@ import { url } from "../../lib/url";
 
 interface Props { id?: string; class?: string }
 const { id, class: cls } = Astro.props;
-const endpoint = site.formEndpoint;
+const { accessKey, subject } = site.form;
+const endpoint = accessKey ? site.form.endpoint : "";
 
 if (!endpoint) {
-  console.warn("[QuoteForm] site.formEndpoint is empty: the quote form will not submit.");
+  console.warn("[QuoteForm] site.form.accessKey is empty: the quote form will not submit.");
 }
 
 // Romanian numbers: 0 / +40 / 0040, then 2xx, 3xx or 7xx and six more digits, optional separators.
@@ -23,6 +24,13 @@ const phonePattern = String.raw`(\+40|0040|0)\s?[237]\d{2}([\s.\-]?\d{3}){2}`;
 <div id={id} class={cls}>
   <form method="post" action={endpoint || undefined} novalidate data-quote-form data-endpoint={endpoint}
     data-phone={site.contact.phone} class="grid gap-6 sm:grid-cols-2">
+    {accessKey && (
+      <>
+        <input type="hidden" name="access_key" value={accessKey} />
+        <input type="hidden" name="subject" value={subject} />
+        <input type="hidden" name="from_name" value={`${site.name} — site`} />
+      </>
+    )}
     <TextField id="nume" label="Nume" required autocomplete="name" />
     <TextField id="telefon" label="Telefon" type="tel" required autocomplete="tel" pattern={phonePattern}
       hint="De exemplu 0722 123 456." />
@@ -167,12 +175,27 @@ const phonePattern = String.raw`(\+40|0040|0)\s?[237]\d{2}([\s.\-]?\d{3}){2}`;
       const submit = form.querySelector<HTMLButtonElement>("button[type=submit]");
       if (submit) submit.disabled = true;
       try {
+        // Make the email readable: the service's name instead of its slug, the consent spelled out,
+        // and no honeypot field.
+        const data = new FormData(form);
+        data.delete("website");
+        const service = select?.value ? select.selectedOptions[0].text : "";
+        if (service) data.set("serviciu", service);
+        // Subject: "<base> - <name> - <service>", the service only when one is chosen.
+        const subjectParts = [data.get("subject"), String(data.get("nume") ?? "").trim(), service];
+        data.set("subject", subjectParts.filter(Boolean).join(" - "));
+        if (data.has("acord")) {
+          data.delete("acord");
+          data.set("Acord prelucrare date", "da");
+        }
         const response = await fetch(endpoint, {
           method: "POST",
-          body: new FormData(form),
+          body: data,
           headers: { Accept: "application/json" },
         });
-        if (!response.ok) throw new Error(String(response.status));
+        // Web3Forms reports some failures in the body, so check both.
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || !result.success) throw new Error(String(response.status));
         showSuccess();
       } catch {
         status.textContent = `Cererea nu a putut fi trimisă. Încercați din nou sau sunați-ne la ${phone}.`;

@@ -27,11 +27,16 @@ export const site = {
   },
 
   /**
-   * Where the quote form posts. Empty until hosting is chosen: the form then shows a
-   * "coming soon" message with the phone number instead of submitting.
-   * Netlify Forms: "/" (and add data-netlify to the form); Formspree and similar: their URL.
+   * Quote form, sent through Web3Forms (web3forms.com). To send to another inbox, replace accessKey
+   * with the key from that Web3Forms account. An empty accessKey turns sending off: the form then
+   * shows a "coming soon" message with the phone number. The key is public by design.
    */
-  formEndpoint: "", // TODO(content)
+  form: {
+    endpoint: "https://api.web3forms.com/submit",
+    accessKey: "113ee90f-7fc9-47b4-a3d4-be224382a63f",
+    /** Subject of the email each request arrives as. */
+    subject: "Cerere de ofertă de pe site",
+  },
 };
 
 // Contact is reached through the "Solicită ofertă" button, so it has no nav link (the footer adds one).
