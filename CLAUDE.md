@@ -18,7 +18,7 @@ A fully static site (no SSR adapter). All pages exist; most company details and 
 - `src/components/sections/` — page sections: `CtaBand`, `HeroBanner`, `ServicesShowcase`, `ProcessSteps`, `QuoteForm`.
 - `src/components/icons/` — seven line icons, one per service, redrawn from the brand moodboard's iconography, plus `IconInstalare` (screwdriver) for the "Cum lucrăm" step.
 - `src/lib/url.ts` — `url()` prefixes root-relative paths with the base path. GitHub Pages serves the site under `/ONYXSecuritySolutions` (the deploy workflow passes `--base`), so every internal link, `public/` file and absolute URL must go through `url()`; a bare `href="/contact"` breaks there.
-- `src/data/` — `site.ts` (contact, legal, nav links, CTAs, `formEndpoint`), `services.ts` (the seven services in order, with icon), `service-slugs.ts`.
+- `src/data/` — `site.ts` (contact, legal, nav links, CTAs, `form`: the Web3Forms endpoint and access key), `services.ts` (the seven services in order, with icon), `service-slugs.ts`.
 - `src/pages/` — `/`, `/solutii` (all services, anchors `#<slug>`), `/despre-noi`, `/contact`, `/politica-de-confidentialitate` (the only light-theme page), `404`, and `robots.txt.ts`.
 - `scripts/` — one-off image generators using sharp: `trim-logos.mjs` (run only on fresh logo exports), `make-favicons.mjs`, `make-og-image.mjs`.
 
@@ -57,4 +57,4 @@ Key mechanics spread across `global.css` and the doc:
 - Polite plural address ("Solicitați o ofertă"), calm tone, no exclamation marks or emoji.
 - Primary CTA "Solicită ofertă", secondary "Vezi soluțiile". Service order and taglines are listed in section 5 of the design doc.
 - Every placeholder is marked `TODO(content)`; `grep -rn "TODO(content)" src/` lists what must be filled before launch (company details, IGPR licence, form endpoint, the four service lines missing from the doc, About copy, privacy policy review).
-- The quote form posts to `site.formEndpoint`. While it is empty, the form validates but shows a "coming soon" message with the phone number instead of submitting.
+- The quote form sends through Web3Forms using `site.form` (endpoint, access key, email subject). The access key is public by design; to change the receiving inbox, replace `site.form.accessKey`. With an empty key the form validates but shows a "coming soon" message with the phone number instead of submitting.
